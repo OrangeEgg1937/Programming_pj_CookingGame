@@ -27,6 +27,6 @@ int main() {
 		system("cls");
 
 	} while (user_choice != "6");
-
+cout<<"hi";
 	return 0;
 }
