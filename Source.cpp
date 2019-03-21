@@ -11,7 +11,7 @@ int main() {
 
 		if (user_choice != "1" && user_choice != "2"  && user_choice != "3"  && user_choice != "4"  && user_choice != "5")	// Data validation
 		{
-			cout << "Invalid input, try again!\n\n";
+			cout << "Invalid input, try again! (TESTING) \n\n";
 		}
 		cout << "A good Welcome Message will be designed by someone\n\n";
 		cout << "*** Game Menu ***\n";
