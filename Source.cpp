@@ -4,7 +4,7 @@
 using namespace std;
 
 int main() {
-	string user_choice="1";
+	char user_choice="1";
 	cout << "123456";
 	do	// Main meun
 	{
