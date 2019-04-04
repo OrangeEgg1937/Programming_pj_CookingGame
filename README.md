@@ -1,8 +1,8 @@
 # Programming Group Project : Cooking Game
 
 Programming Guide : System Requirements, We will finish it before deadline :)
-# Meun Progress
-- [x] Game meun
+# Menu Progress
+- [x] Game menu
 - [ ] Start Game 
 - [ ] Settings
 - [ ] Instructions
