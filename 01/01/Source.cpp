@@ -5,9 +5,13 @@
 
 using namespace std;
 
+string Burgertype[10];
 class Time
 {
 public:
+	Time() {
+		hour = minute = second = 0;
+	}
 	void printTime() {
 		cout << hour << ":" << minute << ":" << second << endl;
 	}
@@ -29,13 +33,28 @@ private:
 		return (h >= 0 && h < 24 && m >= 0 && m < 60 && s >= 0 && s < 60);
 	}
 };
-
-class burger 
+class Burger 
 {
 public:
-	burger(string, int);
-
+	void setBurger(string name,string code, int ctime) {	//Name of burger, Ingredient code, Time require for cooking
+		Burgername = name;
+		Cooktime = ctime;
+	}
+	void showBurger();
+private:
+	string Burgername;
+	string Code;
+	int Cooktime;
 };
+
+void init() {  //testing for global local object
+	string Burgertype[10] = { "Cheese burger","Beef burger" };
+	string Burgercode[10] = {"BCBLB","BCTBLB"}
+	Burger CheeseB, BeefB;
+	
+	CheeseB.setBurger("Cheese burger", "BCBLB", 10);
+	BeefB.setBurger("Beef burger", "BCTBLB", 10);
+}
 
 int main() {
 	string user_choice = "0";
