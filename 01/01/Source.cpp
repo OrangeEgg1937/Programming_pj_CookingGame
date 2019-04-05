@@ -9,6 +9,7 @@ int main() {
 	char user_choice = '0';
 	cout << "123456";
 	cout << "test1";
+	cout << "asdasd";
 	do	// Main meun
 	{
 
