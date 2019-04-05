@@ -6,12 +6,11 @@
 using namespace std;
 
 int main() {
-	char user_choice = '0';
-	cout << "123456";
+	string user_choice = "0";
 	do	// Main meun
 	{
 
-		if (user_choice >= "6" && user_choice <= "1")	// Data validation
+		if (user_choice == "1")	// Data validation
 		{
 			cout << "Invalid input, try again! (TESTING) \n\n";
 		}
