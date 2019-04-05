@@ -1,11 +1,14 @@
 #include <iostream>
 #include <string>
+#include <iomanip>
+#include<cstdlib>
 
 using namespace std;
 
 int main() {
 	char user_choice = '0';
 	cout << "123456";
+	cout << "test1";
 	do	// Main meun
 	{
 
