@@ -63,19 +63,12 @@ private:
 
 };
 
-/*void init() {  //testing for global local object
-string Burgertype[10] = { "Cheese burger","Beef burger" };
-string Burgercode[10] = {"BCBLB","BCTBLB"}
-Burger CheeseB, BeefB;
 
-CheeseB.setBurger("Cheese burger", "BCBLB", 10);
-BeefB.setBurger("Beef burger", "BCTBLB", 10);
-} */
 
 int main() {
 	string user_choice = "0";
-	Burger list[2]{ { "Cheese burger ", "Bread, cheese, beef, lettuce, bread ",70 },{ "Beef burger ", "Bread, cheese, tomato, beef, lettuce, bread ",30 } };
-
+	Burger list[2]{ { "Cheese burger ", "BCFLB",70 },{ "Beef burger ", "BCTFLB",30 } };
+	
 	do	// Main meun
 	{
 
