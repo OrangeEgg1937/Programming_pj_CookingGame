@@ -33,12 +33,35 @@ private:
 class burger 
 {
 public:
-	burger(string, int);
+
+	burger(string define_name, string order, int time)
+	{
+		name = define_name;
+		ingredient_order = order;
+		cooking_time = time;
+	}
+
+	int time() {
+		return cooking_time;
+	}
+	string call_name() {
+		return name;
+	}
+	string order()
+	{
+		return ingredient_order;
+	}
+
+private:
+	string name, ingredient_order;
+	int cooking_time;
 
 };
 
 int main() {
 	string user_choice = "0";
+	burger list[2] { { "Cheese burger ", "Bread, cheese, beef, lettuce, bread ",70 },{ "Beef burger ", "Bread, cheese, tomato, beef, lettuce, bread ",30 } };
+
 	do	// Main meun
 	{
 
