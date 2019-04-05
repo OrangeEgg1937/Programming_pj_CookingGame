@@ -5,7 +5,6 @@ using namespace std;
 
 int main() {
 	char user_choice="1";
-	cout << "123456";
 	do	// Main meun
 	{
 
