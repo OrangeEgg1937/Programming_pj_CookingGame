@@ -6,6 +6,7 @@
 using namespace std;
 
 string Burgertype[10];
+
 class Time
 {
 public:
@@ -16,7 +17,7 @@ public:
 		cout << hour << ":" << minute << ":" << second << endl;
 	}
 	void setTime(int h, int m, int s) {
-		if (validTime(h,m,s)) {
+		if (validTime(h, m, s)) {
 			hour = h;
 			minute = m;
 			second = s;
@@ -33,31 +34,48 @@ private:
 		return (h >= 0 && h < 24 && m >= 0 && m < 60 && s >= 0 && s < 60);
 	}
 };
-class Burger 
+
+class Burger
 {
 public:
-	void setBurger(string name,string code, int ctime) {	//Name of burger, Ingredient code, Time require for cooking
-		Burgername = name;
-		Cooktime = ctime;
+
+	Burger(string define_name, string order, int time)
+	{
+		name = define_name;
+		ingredient_order = order;
+		cooking_time = time;
 	}
-	void showBurger();
+
+	int time() {
+		return cooking_time;
+	}
+	string call_name() {
+		return name;
+	}
+	string order()
+	{
+		return ingredient_order;
+	}
+
 private:
-	string Burgername;
-	string Code;
-	int Cooktime;
+	string name, ingredient_order;
+	int cooking_time;
+
 };
 
-void init() {  //testing for global local object
-	string Burgertype[10] = { "Cheese burger","Beef burger" };
-	string Burgercode[10] = {"BCBLB","BCTBLB"}
-	Burger CheeseB, BeefB;
-	
-	CheeseB.setBurger("Cheese burger", "BCBLB", 10);
-	BeefB.setBurger("Beef burger", "BCTBLB", 10);
-}
+/*void init() {  //testing for global local object
+string Burgertype[10] = { "Cheese burger","Beef burger" };
+string Burgercode[10] = {"BCBLB","BCTBLB"}
+Burger CheeseB, BeefB;
+
+CheeseB.setBurger("Cheese burger", "BCBLB", 10);
+BeefB.setBurger("Beef burger", "BCTBLB", 10);
+} */
 
 int main() {
 	string user_choice = "0";
+	Burger list[2]{ { "Cheese burger ", "Bread, cheese, beef, lettuce, bread ",70 },{ "Beef burger ", "Bread, cheese, tomato, beef, lettuce, bread ",30 } };
+
 	do	// Main meun
 	{
 
