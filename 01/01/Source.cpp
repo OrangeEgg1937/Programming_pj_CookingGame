@@ -2,7 +2,7 @@
 #include <string>
 #include <iomanip>
 #include<cstdlib>
-#include<cmath>
+
 using namespace std;
 
 int main() {
