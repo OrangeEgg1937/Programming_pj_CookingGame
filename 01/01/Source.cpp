@@ -67,8 +67,8 @@ private:
 
 int main() {
 	string user_choice = "0";
-	Burger list[2]{ { "Cheese burger ", "BCFLB",70 },{ "Beef burger ", "BCTFLB",30 } };
-	
+	Burger burger1("Cheese burger", "BCFLB",70);
+	burger1.time();
 	do	// Main meun
 	{
 
@@ -83,11 +83,12 @@ int main() {
 		cout << "[3] Burger Menus\n";
 		cout << "[4] Instructions\n";
 		cout << "[5] Credits\n";
-		cout << "[6] Exit\n";
+		cout << "[6] Exn";
 		cout << "*****************\n";
+		burger1.time();
 		cout << "Option(1 - 6) : ";
 		cin >> user_choice;
-		system("cls");
+		/*system("cls");*/
 
 	} while (user_choice != "6");
 	return 0;
