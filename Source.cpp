@@ -4,6 +4,8 @@
 using namespace std;
 
 void credit();
+void burgerMenu();
+void settingsMenu();
 
 int main() {
 	int user_choice;
@@ -28,8 +30,8 @@ int main() {
 		system("cls");
 		switch (user_choice) {
 		case 1: break;
-		case 2: break;
-		case 3: break;
+		case 2: settingsMenu(); break;
+		case 3: burgerMenu(); break;
 		case 4: break;
 		case 5: credit(); break;
 		case 6: break;
@@ -38,6 +40,56 @@ int main() {
 	} while (user_choice != 6);
 	cout << "Good bye!" << "\n";
 	return 0;
+}
+
+void settingsMenu() {
+	int sett_choice;
+	do {
+		cout << "*** Settings Menu ***\n"
+			<< "[1] Time limit [40 sec]\n"
+			<< "[2] Max number of orders [5]\n"
+			<< "[3] Return to Game Menu\n"
+			<< "*********************\n"
+			<< "Option (1 - 3): ";
+		cin >> sett_choice;
+		while (!cin) { //ignore any character
+			cin.clear();
+			cin.ignore(numeric_limits <streamsize> ::max(), '\n');
+		}
+		system("cls");
+		switch (sett_choice) {
+		case 1: break;
+		case 2: break;
+		case 3: break;
+		default: cout << "Invalid input, please input again. \n\n"; break;
+		}
+	} while (sett_choice != 3);
+	return;
+}
+
+void burgerMenu() {
+	int bmenu_choice;
+	do {
+		cout << "**** Burger Menu *****\n"
+			<< "[1] Types of Burger\n"
+			<< "[2] Ingredient Symbols\n"
+			<< "[3] Return to Game Menu\n"
+			<< "*********************\n"
+			<< "Option (1 - 3): ";
+		cin >> bmenu_choice;
+		while (!cin) { //ignore any character
+			cin.clear();
+			cin.ignore(numeric_limits <streamsize> ::max(), '\n');
+		}
+		system("cls");
+		switch (bmenu_choice) {
+		case 1: break;
+		case 2: break;
+		case 3: break;
+		default: cout << "Invalid input, please input again. \n\n"; break;
+		}
+	} while (bmenu_choice != 3);
+	return;
 }
 
 void credit() {
