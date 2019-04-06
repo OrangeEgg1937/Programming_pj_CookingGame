@@ -6,9 +6,23 @@
 using namespace std;
 
 const int max_type = 10, max_burger = 10;
-int min_type = 8, min_burger = 5;
+int min_type = 8, min_burger = 5, max_order = 5, time_limit = 40; //max number of order = 50
 
-class Time
+class Countdown
+{
+public:
+	void startCount(int s) {
+
+		finishTime = time(0) + s;
+	}
+	int printTime() {
+		return finishTime - time(0);
+	}
+private:
+
+	int finishTime;
+};
+/*class Time
 {
 public:
 	Time() {
@@ -34,7 +48,7 @@ private:
 	bool validTime(int h, int m, int s) {
 		return (h >= 0 && h < 24 && m >= 0 && m < 60 && s >= 0 && s < 60);
 	}
-};
+};*/
 
 class Burger
 {
@@ -151,7 +165,7 @@ private:
 	Ingredient ingredients_list[max_type];
 };
 
-List::List() 	// Set up default value of ingredients
+List::List() 	// Set up default value of ingredients                    
 {
 	burger_list[0].modify("Cheese burger", "BCFLB", 10);
 	burger_list[1].modify("Beef burger", "BCTMLB", 10);
@@ -214,9 +228,69 @@ void show_list(List a) // TEST USE !! REMEMBER TO DEL !!
 	cout << endl;
 }
 
-void game_start()
+                         //mylist,timer,order,choice,status  //ordernum=burgernum
+void game_start_order(List a,Countdown timer[],int orderarr[],int ordernum,int status[])
 {
+	string choice;
+	system("CLS");
+	cout << "*** Process Order ***" << endl;
+	cout << left << setw(22) << "Order #" << ": " << ordernum << endl;
+	cout << setw(22) << "Burger" << ": " << a.call_burger_name(orderarr[ordernum])<<endl; //order[choice] e.g order[2]
+	cout << setw(22) << "Status" << ": "  ;
+	switch (status[ordernum]) {
+	case 0:cout << "preparing" << endl; break;
+	case 1:cout << "cooking" << endl; break;
+	case 2:cout << "ready to serve" << endl; break;
+	}
+	cout << setw(22) << "Remaining Time" << ": "
+		<<timer[orderarr[ordernum]].printTime() / 60 
+		<< "'" << timer[orderarr[ordernum]].printTime() % 60 << "\"" << endl;
+	cout << "Please choose [U] for update, [R] for return, or" << endl;
+	cout << "type correct key list to start cooking : ";
+	cin >> choice;
+	if (choice == "U")game_start_order(a, timer, orderarr, ordernum, status);
+};
 
+void game_update_1(List a,Countdown timer[],int status[],int score,int order[]){
+	system("CLS");
+	cout << "*** Order list ***" << endl;
+	for (int i = 1; i <= max_order; i++)
+	{
+		cout << "Order #" << i << ": " << a.call_burger_name(order[i]) << ", ";
+		switch (status[i]) {
+			case 0:cout << "preparing, "; break;
+			case 1:cout << "cooking, "; break;
+			case 2:cout << "ready to serve, "; break;
+		}
+
+		cout<< timer[i].printTime()/60<<"'"<< timer[i].printTime() % 60<<"\"" << endl;
+	}
+	cout << "-----------------------------------------------" << endl;
+	cout << "Score: " << score << endl;
+	cout << "Enter [U] for update, [Q] for Quit, or [1-5] for order: ";
+}
+void game_start(List a)
+{
+	int order[50];
+	int status[50] = {};  //default 0 = preparing   //0-preparing 1-cooking 2-ready to serve
+	char choice; //user input
+	int score = 10; //default score
+	Countdown timer[50]; //timer of each order
+	srand(time(0));
+	cout << "*** Order list ***" << endl;
+	for (int i = 1; i <= max_order; i++)
+	{
+		order[i]= 0 + rand() % (max_order);  //create order
+		timer[i].startCount(time_limit); //start the timer of that order
+	}
+		game_update_1(a, timer, status, score,order); //all order update
+		do {
+			cin >> choice;
+			if (choice == 'U' || choice =='u') game_update_1(a, timer, status, score,order);
+			else if (int(choice)-48 >= 1 && int(choice)-48 <= max_order) { //ascii 
+				game_start_order(a,timer, order, int(choice)-48, status);
+			}
+		} while (choice !='Q');
 }
 
 void setting()
@@ -259,7 +333,7 @@ int main() {
 
 		switch (go)
 		{
-		case '1':game_start(); break;
+		case '1':game_start(mylist); break;
 		case '2':setting(); break;
 		case '7':show_list(mylist); break;
 		}
