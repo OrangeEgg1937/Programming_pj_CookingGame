@@ -317,14 +317,14 @@ void checkdue(List a,Countdown timer[],int order[],int status[],int &score) {
 			}
 			else if (timer[i].printcooktime() == 0) 
 			{
-				score += 10;
-				for (int j = i; j <= max_order; j++)
-					{
-						order[i] = order[i + 1];
-						status[i] = status[i + 1];
-					}
+score += 10;
+for (int j = i; j <= max_order; j++)
+{
+	order[i] = order[i + 1];
+	status[i] = status[i + 1];
+}
 			}
-			
+
 		}
 
 	}
@@ -345,14 +345,14 @@ void game_start(List a)
 		timer[i].startCount(time_limit); //start the timer of that order
 	}
 	do {
-		do{
+		do {
 			system("CLS");
 			for (int i = 1; i <= total_order; i++)
 			{
 				if (order[i] == 0)continue;
 				else
 				{
-					if (timer[i].printTime() == 0)
+					if (timer[i].printTime() <= 0)
 					{
 						score -= 5;
 						for (int j = i; j <= total_order; j++)
@@ -367,7 +367,7 @@ void game_start(List a)
 								status[i] = 0;
 							}
 						}
-						total_order -=1;
+						total_order -= 1;
 					}
 					else if (timer[i].printcooktime() == 0)
 					{
@@ -389,11 +389,12 @@ void game_start(List a)
 
 				}
 
-			}
+			}//sort order when one order is finish//sort order when 1 is finish//sort order
 			if (total_order < max_order)  //Generate new order when a order is less than then total with probability
 			{
 				if (0 + rand() % 2 == 1)
 				{
+					total_order += 1;
 					order[total_order + 1] = 0 + rand() % (max_order);  //create order
 					timer[total_order + 1].startCount(time_limit); //start the timer
 					status[total_order + 1] = 1;
@@ -414,8 +415,9 @@ void game_start(List a)
 			cout << "-----------------------------------------------" << endl;
 			cout << "Score: " << score << endl;
 			if (score < 0)break;
-			cout << "Enter [U] for update, [Q] for Quit, or [1-"<<total_order<<"] for order: ";
+			cout << "Enter [U] for update, [Q] for Quit, or [1-" << total_order << "] for order: ";
 			cin >> choice;
+
 		}while (choice == 'U');
 		while ((choice != 'Q') && ((int)(choice)-48 >= 1) && ((int)(choice)-48 <= total_order)) {
 			string input;
