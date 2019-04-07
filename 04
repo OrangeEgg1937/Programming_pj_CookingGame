@@ -93,7 +93,6 @@ void burgerMenu() {
 	return;
 }
 void instructions() {
-	int instruct_opt;
 	cout << "***Game Instructions***\n";
 	cout << "   How to play the game\n" << "1. Choose \"[1] Start Game\" at the Game Menu to start the game.\n"
 		<< "2. A order list will be shown since the game start.\n" << "   The max number of order is default as 5.\n"
