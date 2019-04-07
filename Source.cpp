@@ -93,33 +93,52 @@ void burgerMenu() {
 	return;
 }
 void instructions() {
-	cout << "***Game Instructions***\n";
-	cout << "   How to play the game\n" << "1. Choose \"[1] Start Game\" at the Game Menu to start the game.\n"
-		<< "2. A order list will be shown since the game start.\n" << "   The max number of order is default as 5.\n"
-		<< "   You can change it by choosing \"[2] Settings\" at the Game Menu.\n";
-
-	cout << "3. Each burger has to go through 3 statuses to complete : preparing, cooking and ready to serve.\n" << "\n"
-		<< "   Status: preparing\n" << "1. Input the order number to process the order with status \"preparing\".\n"
-		<< "2. Type the correct order of ingredient following the Burger Ingredient List.\n"
-		<< "   You just need to input the first character of each ingredient.\n"
-		<< "   If the input is correct, the system returns to the order list.\n"
-		<< "   The status of that order will change to \"cooking\".\n" << "\n"
-
-        << "   Status: cooking\n" << "1. When the burger is in the \"cooking\" status, you have to wait until it is done.\n"
-		<< "   Tips: You can cook other burgers to save time.\n"
-		<< "   If the burger is cooked, the status of the burger will be changed from \"cooking\" to \"ready to serve\". \n";
-	cout << "   Status: ready to serve\n" << "1. Type the order number of the order with status \"ready to serve\" to serve the order.\n"<< "\n";
-	cout << "   Game Rules\n" << "1. When the game starts, you will initially have 10 marks.\n"
-		<< "2. If the order is served on time, 10 marks will be awarded.\n"
-		<< "   But if the order cannot be served within the time limit, 5 marks will be deducted.\n"
-		<< "3. The game finishes when the score < 0 and you will be returned to the Game Menu.\n" << "\n";
-
-	cout << "   Time limit\n" << "1. All order of all types of burger are same.\n"
-		<< "2. The time limit is defaulted as 40 seconds\n" << "3. You can change it by choosing \"[2] Settings\" at the Game Menu.";
-
-	cout << "   How to quit the game\n" << "You can input ‘q’ or ‘Q’ in the order list page to quit the game.";
-	system("pause");
-	system("cls");
+	int instruct_choice;
+	do {
+		cout << "***Game Instructions***\n";
+		cout << "[1] How to play the game\n";
+		cout << "[2] Game Rules\n";
+		cout << "[3] About the Time limit\n";
+		cout << "[4} How to quit the game\n";
+		cout << "[5] Back to the Game Menu\n";
+		cout << "Option(1-5):";
+		cin >> instruct_choice;
+		switch (instruct_choice) {
+		case 1:	 cout << "   How to play the game\n" << "1. Choose \"[1] Start Game\" at the Game Menu to start the game.\n"
+			<< "2. A order list will be shown since the game start.\n" << "   The max number of order is default as 5.\n"
+			<< "   You can change it by choosing \"[2] Settings\" at the Game Menu.\n";
+			cout << "3. Each burger has to go through 3 statuses to complete : preparing, cooking and ready to serve.\n" << "\n"
+				<< "   Status: preparing\n" << "1. Input the order number to process the order with status \"preparing\".\n"
+				<< "2. Type the correct order of ingredient following the Burger Ingredient List.\n"
+				<< "   You just need to input the first character of each ingredient.\n"
+				<< "   If the input is correct, the system returns to the order list.\n"
+				<< "   The status of that order will change to \"cooking\".\n" << "\n"
+				<< "   Status: cooking\n" << "1. When the burger is in the \"cooking\" status, you have to wait until it is done.\n"
+				<< "   Tips: You can cook other burgers to save time.\n"
+				<< "   If the burger is cooked, the status of the burger will be changed from \"cooking\" to \"ready to serve\". \n";
+			cout << "   Status: ready to serve\n" << "1. Type the order number of the order with status \"ready to serve\" to serve the order.\n";
+			system("pause");
+			system("cls");
+			break;
+		case 2: cout << "   Game Rules\n" << "1. When the game starts, you will initially have 10 marks.\n"
+			<< "2. If the order is served on time, 10 marks will be awarded.\n"
+			<< "   But if the order cannot be served within the time limit, 5 marks will be deducted.\n"
+			<< "3. The game finishes when the score < 0 and you will be returned to the Game Menu.\n";
+			system("pause");
+			system("cls");
+			break;
+		case 3: cout << "   Time limit\n" << "1. All order of all types of burger are same.\n"
+			<< "2. The time limit is defaulted as 40 seconds\n" << "3. You can change it by choosing \"[2] Settings\" at the Game Menu.\n";
+			system("pause");
+			system("cls");
+			break;
+		case 4: cout << "   How to quit the game\n" << "You can input ‘q’ or ‘Q’ in the order list page to quit the game.\n";
+			system("pause");
+			system("cls");
+		case 5: break;
+		default: cout << "Invalid input, please input again. \n\n"; break;
+		}
+	} while (instruct_choice != 5);
 }
 void credit() {
 	string line(50, '-');
