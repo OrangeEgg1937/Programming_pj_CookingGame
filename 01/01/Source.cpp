@@ -6,11 +6,14 @@
 using namespace std;
 
 const int max_type = 10, max_burger = 10;//i change temporary
-int min_type = 8, min_burger = 5, max_order = 5, time_limit = 40; //max number of order = 50
+int min_type = 8, min_burger = 5, max_order = 5, time_limit = 40; 
 
 class Countdown
 {
 public:
+	Countdown() {
+		Timedue = finishtime = 0;
+	}
 	void startCount(int s) {
 
 		Timedue = time(0) + s;
@@ -29,34 +32,7 @@ private:
 
 	int Timedue,finishtime;
 
-};
-/*class Time
-{
-public:
-	Time() {
-		hour = minute = second = 0;
-	}
-	void printTime() {
-		cout << hour << ":" << minute << ":" << second << endl;
-	}
-	void setTime(int h, int m, int s) {
-		if (validTime(h, m, s)) {
-			hour = h;
-			minute = m;
-			second = s;
-		}
-		else
-			hour = minute = second = 0;
-	}
-	int getHour() {
-		return hour;
-	}
-private:
-	int hour, minute, second;
-	bool validTime(int h, int m, int s) {
-		return (h >= 0 && h < 24 && m >= 0 && m < 60 && s >= 0 && s < 60);
-	}
-};*/
+};
 
 class Burger
 {
@@ -236,224 +212,138 @@ void show_list(List a) // TEST USE !! REMEMBER TO DEL !!
 	cout << endl;
 }
 
-                         //mylist,timer,order,choice,status  //ordernum=burgernum
-/*void game_start_order(List a,Countdown timer[],int orderarr[],int ordernum,int status[])
+
+void display_order(List a, Countdown timer[],int order[],int status[], int score, int total_order) {
+	cout << "*** Order list ***" << endl;
+	for (int i = 1; i <= total_order; i++)
+	{
+		cout << "Order #" << i << ": " << a.call_burger_name(order[i]) << ", ";
+		switch (status[i]) {
+		case 0:cout << "preparing, "; break;
+		case 1:cout << "cooking, "; break;
+		case 2:cout << "ready to serve, "; break;
+		}
+		cout << timer[i].printTime() / 60 << "'" << timer[i].printTime() % 60 << "\"" << "    "<< timer[i].printcooktime() << endl;
+	}
+	cout << "-----------------------------------------------" << endl;
+	cout << "Score: " << score << endl;
+}
+void generate_new_order(Countdown timer[],int order[],int status[],int &total_order)
 {
-	string choice;
+	if (total_order < max_order)  //Generate new order when a order is less than then total with probability
+	{
+		if (0 + rand() % 2 == 0)
+		{
+			total_order += 1;
+			order[total_order + 1] = 0 + rand() % max_order;  //create order   //error
+			timer[total_order + 1].startCount(time_limit); //start the timer
+			status[total_order + 1] = 0;
+		}
+	}
+}
+
+void sorting(int order[],int status[],Countdown timer[],int i,int &total_order){
+	for (int j = i; j < total_order; j++)
+	{
+		order[j] = order[j + 1];
+		status[j] = status[j + 1];
+		timer[j] = timer[j + 1];
+	}
+		total_order--;
+}
+void check_order_expired(List a, Countdown timer[], int order[], int status[], int &total_order, int &score,int i) {
+	if (timer[i].printTime() <= 0)
+	{
+		score -= 5;
+		sorting(order, status, timer, i, total_order);
+	}
+	else if (timer[i].printcooktime() == 0)
+	{
+		status[i] = 2;
+	}
+}
+void display_process(List a,Countdown timer[],int status[],int order[],char choice) {
 	system("CLS");
 	cout << "*** Process Order ***" << endl;
-	cout << left << setw(22) << "Order #" << ": " << ordernum << endl;
-	cout << setw(22) << "Burger" << ": " << a.call_burger_name(orderarr[ordernum])<<endl; //order[choice] e.g order[2]
-	cout << setw(22) << "Status" << ": "  ;
-	switch (status[ordernum]) {
+	cout << left << setw(22) << "Order #" << ": " << (int)choice - 48 << endl;
+	cout << setw(22) << "Burger" << ": " << a.call_burger_name(order[(int)(choice)-48]) << endl;
+	cout << setw(22) << "Status" << ": ";
+	switch (status[(int)(choice)-48]) {
 	case 0:cout << "preparing" << endl; break;
 	case 1:cout << "cooking" << endl; break;
 	case 2:cout << "ready to serve" << endl; break;
 	}
 	cout << setw(22) << "Remaining Time" << ": "
-		<<timer[orderarr[ordernum]].printTime() / 60 
-		<< "'" << timer[orderarr[ordernum]].printTime() % 60 << "\"" << endl;
-	cout << "Please choose [U] for update, [R] for return, or" << endl;
-	cout << "type correct key list to start cooking : ";
-	cin >> choice;
-	if (choice == "U")game_start_order(a, timer, orderarr, ordernum, status);
-};
-
-void game_update_1(List a,Countdown timer[],int status[],int score,int order[]){
-	system("CLS");
-	cout << "*** Order list ***" << endl;
-	for (int i = 1; i <= max_order; i++)
-	{
-		cout << "Order #" << i << ": " << a.call_burger_name(order[i]) << ", ";
-		switch (status[i]) {
-			case 0:cout << "preparing, "; break;
-			case 1:cout << "cooking, "; break;
-			case 2:cout << "ready to serve, "; break;
-		}
-
-		cout<< timer[i].printTime()/60<<"'"<< timer[i].printTime() % 60<<"\"" << endl;
-	}
-	cout << "-----------------------------------------------" << endl;
-	cout << "Score: " << score << endl;
-	cout << "Enter [U] for update, [Q] for Quit, or [1-5] for order: ";
+		<< timer[(int)(choice)-48].printTime() / 60
+		<< "'" << timer[(int)(choice)-48].printTime() % 60 << "\"" << endl;
+	cout << setw(22) << "Burger Key List" << ": " << a.call_burger_ingredients(order[(int)(choice)-48]) << endl;
 }
 void game_start(List a)
 {
-	int order[50];
-	int status[50] = {};  //default 0 = preparing   //0-preparing 1-cooking 2-ready to serve
-	char choice; //user input
-	int score = 10; //default score
-	Countdown timer[50]; //timer of each order
-	srand(time(0));
-	cout << "*** Order list ***" << endl;
-	for (int i = 1; i <= max_order; i++)
-	{
-		order[i]= 0 + rand() % (max_order);  //create order
-		timer[i].startCount(time_limit); //start the timer of that order
-	}
-		game_update_1(a, timer, status, score,order); //all order update
-		do {
-			cin >> choice;
-			if (choice == 'U' || choice =='u') game_update_1(a, timer, status, score,order);
-			else if (int(choice)-48 >= 1 && int(choice)-48 <= max_order) { //ascii 
-				game_start_order(a,timer, order, int(choice)-48, status);
-			}
-		} while (choice !='Q');
-}*/
-void checkdue(List a,Countdown timer[],int order[],int status[],int &score) {
-	for (int i = 1; i <= max_order; i++)
-	{
-		if (order[i] == 0)continue;
-		else 
-		{
-			if (timer[i].printTime() == 0) 
-			{
-				score -= 5;
-				for (int j = i; j <= max_order; j++)
-				{
-					order[i] = order[i + 1];
-					status[i] = status[i + 1];
-				}
-			}
-			else if (timer[i].printcooktime() == 0) 
-			{
-score += 10;
-for (int j = i; j <= max_order; j++)
-{
-	order[i] = order[i + 1];
-	status[i] = status[i + 1];
-}
-			}
-
-		}
-
-	}
-}
-void game_start(List a)
-{
-	int order[50] = {};
-	int status[50] = {};  //default 0 = preparing   //0-preparing 1-cooking 2-ready to serve
+	int order[51] = {};
+	int status[51] = {};  //default 0 = preparing   //0-preparing 1-cooking 2-ready to serve
 	char choice; //user input
 	int score = 10; //default score
 	int temp, total_order = max_order;
 	bool pass = 1;
-	Countdown timer[50]; //timer of each order
+	Countdown timer[51]; //timer of each order
 	srand(time(0));
 	for (int i = 1; i <= max_order; i++)
 	{
 		order[i] = 0 + rand() % (max_order);  //create order
 		timer[i].startCount(time_limit); //start the timer of that order
 	}
-	do {
+	while (score >= 0 || choice != 'Q') {
 		do {
 			system("CLS");
-			for (int i = 1; i <= total_order; i++)
-			{
-				if (order[i] == 0)continue;
-				else
-				{
-					if (timer[i].printTime() <= 0)
-					{
-						score -= 5;
-						for (int j = i; j <= total_order; j++)
-						{
-							if (j < total_order) {
-								order[i] = order[i + 1];
-								status[i] = status[i + 1];
-								timer[i] = timer[i + 1];
-							}
-							else {
-								order[i] = 0;
-								status[i] = 0;
-							}
-						}
-						total_order -= 1;
-					}
-					else if (timer[i].printcooktime() == 0)
-					{
-						score += 10;
-						for (int j = i; j <= total_order; j++)
-						{
-							if (j < total_order) {
-								order[i] = order[i + 1];
-								status[i] = status[i + 1];
-								timer[i] = timer[i + 1];
-							}
-							else {
-								order[i] = 0;
-								status[i] = 0;
-							}
-						}
-						total_order -= 1;
-					}
-
-				}
-
-			}//sort order when one order is finish//sort order when 1 is finish//sort order
+			for (int i=1;i<=total_order;i++){
+				check_order_expired(a, timer, order, status, total_order, score,i);
+			}
 			if (total_order < max_order)  //Generate new order when a order is less than then total with probability
 			{
-				if (0 + rand() % 2 == 1)
+				if (rand() % 3 == 0)
 				{
-					total_order += 1;
-					order[total_order + 1] = 0 + rand() % (max_order);  //create order
+					order[total_order + 1] = 0 + rand() % max_order;  //create order   //error
 					timer[total_order + 1].startCount(time_limit); //start the timer
-					status[total_order + 1] = 1;
-
+					status[total_order + 1] = 0;
+					total_order += 1;
 				}
 			}
-			cout << "*** Order list ***" << endl;
-			for (int i = 1; i <= total_order; i++)
-			{
-				cout << "Order #" << i << ": " << a.call_burger_name(order[i]) << ", ";
-				switch (status[i]) {
-				case 0:cout << "preparing, "; break;
-				case 1:cout << "cooking, "; break;
-				case 2:cout << "ready to serve, "; break;
-				}
-				cout << timer[i].printTime() / 60 << "'" << timer[i].printTime() % 60 << "\"" << endl;
-			}
-			cout << "-----------------------------------------------" << endl;
-			cout << "Score: " << score << endl;
-			if (score < 0)break;
+			display_order(a, timer, order, status, score, total_order);
+			if (score < 0) break;//lose
 			cout << "Enter [U] for update, [Q] for Quit, or [1-" << total_order << "] for order: ";
 			cin >> choice;
-
-		}while (choice == 'U');
-		while ((choice != 'Q') && ((int)(choice)-48 >= 1) && ((int)(choice)-48 <= total_order)) {
-			string input;
-			do {
-				if (choice == 'U')choice = temp;
-				system("CLS");
-				cout << "*** Process Order ***" << endl;
-				cout << left << setw(22) << "Order #" << ": " << (int)choice - 48 << endl;
-				cout << setw(22) << "Burger" << ": " << a.call_burger_name(order[(int)(choice)-48]) << endl;
-				cout << setw(22) << "Status" << ": ";
-				switch (status[(int)(choice)-48]) {
-				case 0:cout << "preparing" << endl; break;
-				case 1:cout << "cooking" << endl; break;
-				case 2:cout << "ready to serve" << endl; break;
+		} while (choice == 'U' || choice == 'u');
+		if (score < 0) break;//lose
+		if (((int)(choice)-48 >= 1) && ((int)(choice)-48 <= total_order) && status[(int)(choice)-48] == 2) {
+			score += 10;
+			status[(int)(choice)-48] = 0;
+			sorting(order, status, timer, (int)(choice)-48, total_order);
+		}
+		else {
+			while ((choice != 'Q') && ((int)(choice)-48 >= 1) && ((int)(choice)-48 <= total_order)) {
+				string input;
+				do {
+					if (choice == 'U')choice = temp;
+					display_process(a, timer, status, order, choice);
+					if (pass == 0)cout << "Wrong Input!!!" << endl;
+					cout << "Please choose [U] for update, [R] for return, or" << endl;
+					cout << "type correct key list to start cooking : ";
+					temp = choice;
+					cin >> input;
+				} while (input == "U");
+				if (input == a.call_burger_ingredients(order[(int)(choice)-48]))
+				{
+					pass = 1;
+					status[(int)(choice)-48] = 1;
+					timer[(int)(choice)-48].cookCount(a.call_burger_time(order[(int)(choice)-48]));
+					break;
 				}
-				cout << setw(22) << "Remaining Time" << ": "
-					<< timer[order[(int)(choice)-48]].printTime() / 60
-					<< "'" << timer[order[(int)(choice)-48]].printTime() % 60 << "\"" << endl;
-				cout<<setw(22)<<"Burger Key List"<<": "<< a.call_burger_ingredients(order[(int)(choice)-48]) << endl;
-				if (pass == 0)cout << "Wrong Input!!!" << endl;
-				cout << "Please choose [U] for update, [R] for return, or" << endl;
-				cout << "type correct key list to start cooking : ";
-				temp = choice;
-				cin >> input;	
-			} while (input == "U");
-			if (input == a.call_burger_ingredients(order[(int)(choice)-48]))
-			{
-				pass = 1;
-				status[(int)(choice)-48] = 1;
-				timer[(int)(choice)-48].cookCount(a.call_burger_time(order[(int)(choice)-48]));
-				break;
+				else if (input == "R") break;
+				else pass = 0;
 			}
-			else if (input == "R") break;
-			else pass = 0;
-		}	
-	}while (choice != 'Q'||score<0);
+		}
+	}
 }
 
 void setting()
