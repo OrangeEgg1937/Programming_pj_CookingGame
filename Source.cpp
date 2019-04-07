@@ -33,7 +33,7 @@ int main() {
 		case 1: break;
 		case 2: settingsMenu(); break;
 		case 3: burgerMenu(); break;
-		case 4: break;
+		case 4: instructions();break;
 		case 5: credit(); break;
 		case 6: break;
 		default: cout << "Invalid input, please input again. \n\n"; break;
