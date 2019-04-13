@@ -1,7 +1,8 @@
-#include <iostream>
+﻿#include <iostream>
 #include <string>
 #include <iomanip>
 #include <cstdlib>
+#include <windows.h>
 
 using namespace std;
 
@@ -173,6 +174,12 @@ List::List() 	// Set up default value of ingredients
 		ingredients_list[i].modify("NO",'N');
 	}
 }
+void SetColor(int color = 7) //for setting font color
+{
+	HANDLE hConsole;
+	hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleTextAttribute(hConsole, color);
+}
 
 void show_list(List a) // TEST USE !! REMEMBER TO DEL !!
 {
@@ -214,26 +221,34 @@ void show_list(List a) // TEST USE !! REMEMBER TO DEL !!
 
 
 void display_order(List a, Countdown timer[],int order[],int status[], int score, int total_order) {
+	SetColor();
 	cout << "*** Order list ***" << endl;
 	for (int i = 1; i <= total_order; i++)
 	{
-		cout << "Order #" << i << ": " << a.call_burger_name(order[i]) << ", ";
+		(timer[i].printTime() < 15)?SetColor(12):SetColor();
+		cout << "Order #"<< i ; SetColor();
+		cout << ": " << a.call_burger_name(order[i]) << ", ";
 		switch (status[i]) {
-		case 0:cout << "preparing, "; break;
-		case 1:cout << "cooking, "; break;
-		case 2:cout << "ready to serve, "; break;
+		case 0: {SetColor(); cout << "preparing, "; SetColor();  break; }
+		case 1: {SetColor(14); cout << "cooking, "; SetColor();  break; }
+		case 2: {SetColor(11); cout << "ready to serve, "; SetColor();  break; }
 		}
 		cout << timer[i].printTime() / 60 << "'" << timer[i].printTime() % 60 << "\"" << "    "<< timer[i].printcooktime() << endl;
 	}
+	SetColor();
 	cout << "-----------------------------------------------" << endl;
+	for (int i = 1; i <= score / 5; i++) { cout <<"*"; }
+	cout<<endl;
 	cout << "Score: " << score << endl;
 }
 void generate_new_order(Countdown timer[],int order[],int status[],int &total_order)
 {
+	int randaccu = 1; 
 	if (total_order < max_order)  //Generate new order when a order is less than then total with probability
 	{
 		if (0 + rand() % 2 == 0)
 		{
+			srand((time(0))*randaccu++);//Prevent only the same burger will become a order in a second
 			total_order += 1;
 			order[total_order + 1] = 0 + rand() % max_order;  //create order   //error
 			timer[total_order + 1].startCount(time_limit); //start the timer
@@ -242,7 +257,7 @@ void generate_new_order(Countdown timer[],int order[],int status[],int &total_or
 	}
 }
 
-void sorting(int order[],int status[],Countdown timer[],int i,int &total_order){
+void sorting(int order[],int status[],Countdown timer[],int i,int &total_order){ //1 order is expired, the other will be sorted upward.
 	for (int j = i; j < total_order; j++)
 	{
 		order[j] = order[j + 1];
@@ -269,9 +284,9 @@ void display_process(List a,Countdown timer[],int status[],int order[],char choi
 	cout << setw(22) << "Burger" << ": " << a.call_burger_name(order[(int)(choice)-48]) << endl;
 	cout << setw(22) << "Status" << ": ";
 	switch (status[(int)(choice)-48]) {
-	case 0:cout << "preparing" << endl; break;
-	case 1:cout << "cooking" << endl; break;
-	case 2:cout << "ready to serve" << endl; break;
+	case 0: {SetColor(); cout << "preparing" << endl; SetColor(); break; }
+	case 1: {SetColor(14); cout << "cooking" << endl; SetColor(); break; }
+	case 2: {SetColor(11); cout << "ready to serve" << endl; SetColor(); break; }
 	}
 	cout << setw(22) << "Remaining Time" << ": "
 		<< timer[(int)(choice)-48].printTime() / 60
@@ -326,7 +341,11 @@ void game_start(List a)
 				do {
 					if (choice == 'U')choice = temp;
 					display_process(a, timer, status, order, choice);
-					if (pass == 0)cout << "Wrong Input!!!" << endl;
+					if (pass == 0) {
+						SetColor(252);
+						cout << "Wrong Input!!!" << endl;
+						SetColor();
+					}
 					cout << "Please choose [U] for update, [R] for return, or" << endl;
 					cout << "type correct key list to start cooking : ";
 					temp = choice;
