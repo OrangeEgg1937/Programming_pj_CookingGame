@@ -157,14 +157,14 @@ List::List() 	// Set up default value of ingredients
 	burger_list[2].modify("Mushroom burger", "BCFMB", 15);
 	burger_list[3].modify("Veggie burger", "BTELB", 10);
 	burger_list[4].modify("Salmon burger", "BCFSB", 15);
-	ingredients_list[0].modify("Bread", 'B');
-	ingredients_list[1].modify("Cheese", 'C');
-	ingredients_list[2].modify("Beef", 'F');
-	ingredients_list[3].modify("Lettuce", 'L');
-	ingredients_list[4].modify("Tomato", 'T');
-	ingredients_list[5].modify("Mushroom", 'M');
-	ingredients_list[6].modify("Egg", 'E');
-	ingredients_list[7].modify("Salmon", 'S');
+	ingredients_list[0].modify("[B]read", 'B');
+	ingredients_list[1].modify("[C]heese", 'C');
+	ingredients_list[2].modify("Bee[f]", 'F');
+	ingredients_list[3].modify("[L]ettuce", 'L');
+	ingredients_list[4].modify("[T]omato", 'T');
+	ingredients_list[5].modify("[M]ushroom", 'M');
+	ingredients_list[6].modify("[E]gg", 'E');
+	ingredients_list[7].modify("[S]almon", 'S');
 	for (int i = 5; i < max_type; i++)
 	{
 		burger_list[i].modify("", "", 0);
@@ -291,6 +291,7 @@ void display_process(List a,Countdown timer[],int status[],int order[],char choi
 	cout << setw(22) << "Remaining Time" << ": "
 		<< timer[(int)(choice)-48].printTime() / 60
 		<< "'" << timer[(int)(choice)-48].printTime() % 60 << "\"" << endl;
+	cout << "Burger Ingredient List:" << endl;
 	cout << setw(22) << "Burger Key List" << ": " << a.call_burger_ingredients(order[(int)(choice)-48]) << endl;
 }
 void game_start(List a)
