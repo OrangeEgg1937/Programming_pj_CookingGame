@@ -382,7 +382,7 @@ void sorting(int order[],int status[],Countdown timer[],int i,int &total_order){
 		total_order--;
 }
 
-void check_order_expired(List a, Countdown timer[], int order[], int status[], int &total_order, int &score,int i) {
+void check_order_expired(List a, Countdown timer[], int order[], int status[], int &total_order, int &score,int i) {   
 	if (timer[i].printTime() <= 0)
 	{
 		score -= 5;
@@ -418,7 +418,7 @@ void order_list(Order a[], int score)
 	cout << "*** Process Order ***" << endl;
 	for (int i = 0; i < max_order; i++) // Refresh all order
 	{
-		cout << "Order #:" << i + 1 << ": ";
+		cout << "Order #" << i + 1 << ": ";
 		cout << a[i].show_order_name() << ", ";
 		cout << a[i].show_status() << ", ";
 		cout << a[i].show_order_time() / 60 << "'" << a[i].show_order_time() - (a[i].show_order_time() / 60 * 60) << "\"" << endl;
