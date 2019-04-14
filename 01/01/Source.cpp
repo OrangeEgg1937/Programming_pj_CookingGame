@@ -6,7 +6,7 @@
 
 using namespace std;
 
-const int max_type = 10, max_burger = 10;//i change temporary
+const int max_type = 10, max_burger = 10;
 int min_type = 8, min_burger = 5, max_order = 5, time_limit = 40; 
 
 class Countdown
