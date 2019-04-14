@@ -1,0 +1,8 @@
+﻿  Source.cpp
+c:\users\user\desktop\programming_pj_cookinggame-test\01\01\source.cpp(22): warning C4244: '=': conversion from 'time_t' to 'int', possible loss of data
+c:\users\user\desktop\programming_pj_cookinggame-test\01\01\source.cpp(26): warning C4244: '=': conversion from 'time_t' to 'int', possible loss of data
+c:\users\user\desktop\programming_pj_cookinggame-test\01\01\source.cpp(29): warning C4244: 'return': conversion from 'time_t' to 'int', possible loss of data
+c:\users\user\desktop\programming_pj_cookinggame-test\01\01\source.cpp(32): warning C4244: 'return': conversion from 'time_t' to 'int', possible loss of data
+c:\users\user\desktop\programming_pj_cookinggame-test\01\01\source.cpp(473): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+c:\users\user\desktop\programming_pj_cookinggame-test\01\01\source.cpp(292): warning C4715: 'Order::show_status': not all control paths return a value
+  01.vcxproj -> C:\Users\USER\Desktop\Programming_pj_CookingGame-test\01\x64\Debug\01.exe
