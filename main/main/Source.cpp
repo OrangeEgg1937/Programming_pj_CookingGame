@@ -314,42 +314,31 @@ void SetColor(int color = 7) //for setting font color
 	SetConsoleTextAttribute(hConsole, color);
 }
 
-void show_list(List a) // TEST USE !! REMEMBER TO DEL !!
+void showTypeofburgers(List a)
 {
-	cout << "Type of burgers\t\t" << "Ingredients orders\t" << "Cooking time (in second)" << endl;
+	string line(110, '-');
+	cout << left << setw(20) << "Type of burgers" << setw(28) << "Cooking time (in second)" << "Ingredients orders" << "\n"
+		<< line << "\n";
 	for (int i = 0; i < min_burger; i++)
 	{
-		cout << a.call_burger_name(i) << "\t\t";
-		cout << a.call_burger_ingredients(i) << "\t\t\t";
-		cout << a.call_burger_time(i) << "S";
-		cout << endl;
+		cout << left << setw(20) << a.call_burger_name(i)
+			<< setw(28) << a.call_burger_time(i);
+		a.display_forder(i);
+		cout << "\n";
 	}
+	cout << "\n";
+}
 
-	cout << endl;
-	cout << endl;
-
-	cout << setw(25) << "Type of Ingredients" << setw(10) << "Symbol" << endl;
-
+void showIngsymbol(List a) {
+	string line(28, '-');
+	cout << left << setw(15) << "Ingredients" << setw(10) << "Symbol" << "\n" << line << "\n";
 	for (int i = 0; i < min_type; i++)
 	{
-		cout << setw(25) << a.call_ingredients_fname(i);
-		cout << setw(8) << a.call_ingredients_sname(i) << "/" << char(a.call_ingredients_sname(i) + 32);
-		cout << endl;
+		cout << setw(15) << a.call_ingredients_fname(i)
+			<< a.call_ingredients_sname(i) << "/" << char(a.call_ingredients_sname(i) + 32);
+		cout << "\n";
 	}
-
-	cout << endl;
-	cout << endl;
-
-	cout << "Type of burgers\t\t" << "Ingredients orders(Full Name)" << endl;
-	for (int i = 0; i < min_burger; i++)
-	{
-		cout << a.call_burger_name(i) << "\t\t";
-		a.display_forder(i);
-
-		cout << endl;
-	}
-
-	cout << endl;
+	cout << "\n";
 }
 
 /*
@@ -579,7 +568,7 @@ int main() {
 		system("cls");
 		switch (user_choice) {
 		case 1: game_start(mylist); break;
-		case 2: settingsMenu(); break; /*setting()*/
+		case 2: settingsMenu(); break; //setting()
 		case 3: burgerMenu(); break;
 		case 4: instructions(); break;
 		case 5: credit(); break;
@@ -633,8 +622,8 @@ void burgerMenu() {
 		}
 		system("cls");
 		switch (bmenu_choice) {
-		case 1: show_list(mylist); break;
-		case 2: show_orderlist(mylist); break;
+		case 1: showTypeofburgers(mylist); system("pause"); system("cls"); break;
+		case 2: showIngsymbol(mylist); system("pause"); system("cls"); break;
 		case 3: break;
 		default: cout << "Invalid input, please input again. \n\n"; break;
 		}
@@ -661,7 +650,7 @@ void instructions() {
 		system("cls");
 		switch (instruct_choice) {
 		case 1:
-			cout << "\n   How to play the game?\n"
+			cout << "\n   How to play the game?\n\n"
 				<< "1. Choose \"[1] Start Game\" at the Game Menu to start the game.\n"
 				<< "2. A order list will be shown since the game start.\n"
 				<< "   The max number of order is default as 5.\n"
