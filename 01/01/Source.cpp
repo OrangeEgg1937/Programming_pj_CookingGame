@@ -193,6 +193,11 @@ public:
 		timer.startCount();
 	}
 
+	int timeremain()
+	{
+		return(timer.printTime());
+	}
+
 	int show_order_time()
 	{
 		if (status == 0 || status == 1)
@@ -251,13 +256,24 @@ public:
 		end_time = 0;
 	}
 
+	void refresh_order(int a)
+	{
+		srand(time(0) + a);
+		food = food_list.call_burger(rand() % (min_burger - 1));
+		status = 0;
+		check_order = 0;
+		end_time = 0;
+	}
+
 	void show_full_ingredient_name()
 	{
 		food_list.display_forder(food.call_burger_code());
 	}
 
-	void order_check(int &score)
+	void order_check(int &score, int time)
 	{
+		if (time < 0)
+			status = 3;
 		if (check_order == 0 && status >= 2)
 		{
 			switch (status)
@@ -267,8 +283,9 @@ public:
 			}
 			check_order = 1;
 		}
-	
 	}
+
+
 
 	int show_order_status_code()
 	{
@@ -371,17 +388,21 @@ void display_order(List a, Countdown timer[],int order[],int status[], int score
 	cout << "Score: " << score << endl;
 }
 */
-/*
-void sorting(int order[],int status[],Countdown timer[],int i,int &total_order){ //1 order is expired, the other will be sorted upward.
-	for (int j = i; j < total_order; j++)
+
+void sorting(Order a[]){ //1 order is expired, the other will be sorted upward.
+	Order temp;
+	for (int j = 0; j < max_order-1; j++)
 	{
-		order[j] = order[j + 1];
-		status[j] = status[j + 1];
-		timer[j] = timer[j + 1];
+		if (a[j].show_order_status_code() == 3)
+		{
+			temp = a[j];
+			a[j] = a[j + 1];
+			a[j + 1] = temp;
+		}
 	}
-		total_order--;
 }
 
+/*
 void check_order_expired(List a, Countdown timer[], int order[], int status[], int &total_order, int &score,int i) {   
 	if (timer[i].printTime() <= 0)
 	{
@@ -413,20 +434,29 @@ void display_process(List a,Countdown timer[],int status[],int order[],char choi
 }
 */
 
+
 void order_list(Order a[], int score)
 {
+	sorting(a);
 	cout << "*** Process Order ***" << endl;
 	for (int i = 0; i < max_order; i++) // Refresh all order
 	{
-		cout << "Order #" << i + 1 << ": ";
-		cout << a[i].show_order_name() << ", ";
-		cout << a[i].show_status() << ", ";
-		cout << a[i].show_order_time() / 60 << "'" << a[i].show_order_time() - (a[i].show_order_time() / 60 * 60) << "\"" << endl;
+		if (a[i].show_order_status_code() != 3)
+		{
+			cout << "Order #" << i + 1 << ": ";
+			cout << a[i].show_order_name() << ", ";
+			cout << a[i].show_status() << ", ";
+			cout << a[i].show_order_time() / 60 << "'" << a[i].show_order_time() - (a[i].show_order_time() / 60 * 60) << "\"" << endl;
+		}
 	}
 	cout << "----------------------------------------------" << endl;
 	cout << "Score: " << score << endl;
-	cout << "Enter[U] for update, [Q] for Quit, or [1 - " << max_order << "] for order :" << endl;
+	if (score >= 0)
+	{
+		cout << "Enter[U] for update, [Q] for Quit, or [1 - " << max_order << "] for order :" << endl;
+	}
 }
+
 
 void show_single_order(Order list[],int i)
 {
@@ -440,6 +470,8 @@ void show_single_order(Order list[],int i)
 			cout << list[i].show_order_name() << endl;
 			cout << "Status                :";
 			cout << list[i].show_status() << endl;
+			cout << "Remaining Time        :";
+			cout << list[i].show_order_time() / 60 << "'" << list[i].show_order_time() - (list[i].show_order_time() / 60 * 60) << "\"" << endl;
 			cout << "Burger Ingredient List:";
 			list[i].show_full_ingredient_name();
 			cout << endl << "Burger Key List       :";
@@ -448,13 +480,15 @@ void show_single_order(Order list[],int i)
 			cout << endl << "type correct key list to start cooking :";
 			
 			cin >> input;
-			
-			if (input == list[i].show_ingredient_order() && list[i].show_status()=="preparing")
+			cin.ignore();
+
+			if (input == list[i].show_ingredient_order() && list[i].show_status() == "preparing")
 			{
 				list[i].cooking_start();
 				break;
 			}
-			
+
+			system("cls");
 
 		} while ((input != "R" && input != "r"));
 	}
@@ -486,15 +520,15 @@ void game_start(List a)
 			for (int i = 0; i < max_order; i++) // Cooking
 			{
 				player_order[i].process();
-				player_order[i].order_check(score);
+				player_order[i].order_check(score, player_order[i].timeremain());
 			}
 			for (int i = 0; i < max_order; i++)
 			{
 				if (player_order[i].show_order_status_code() >= 2)
 				{
-					if ((rand() % 100 + 1) >= 50)
+					if ((rand() % 100 + 1) >= 90)
 					{
-						player_order[i].refresh_order();
+						player_order[i].refresh_order(i);
 						player_order[i].order_start();
 					}
 				}
@@ -509,11 +543,20 @@ void game_start(List a)
 				choice[2] = '\0';
 			}
 
-			cin >> choice;
-			cin.ignore();
+			if (score >= 0)
+			{
+				cin >> choice;
+				cin.ignore();
+			}
+			else
+			{
+				system("pause");
+				system("cls");
+				break;
+			}
 			system("cls");
 
-			if (choice[0] == 'Q' || choice[0] == 'q')
+			if (choice[0] == 'Q' || choice[0] == 'q' || score < 0)
 			{
 				break;
 			}
