@@ -407,6 +407,10 @@ void order_list(Order a[], int score)
 	cout << "*** Process Order ***" << endl;
 	for (int i = 0; i < max_order; i++) // Refresh all order
 	{
+		if (a[i].show_order_status_code() == 3)
+		{
+			continue;
+		}
 		cout << "Order #" << i + 1 << ": ";
 		cout << a[i].show_order_name() << ", ";
 		switch (a[i].show_order_status_code()) {
@@ -1119,7 +1123,7 @@ void random_helping_msg(int a)
 	{
 	case 1:cout << "If you don't know how tp play the game, try to click [4] Instructions. A demo teacher will help you!"; break;
 	case 2:cout << "You can type [2] to set the basic value!"; break;
-	case 3:cout << "Before to play the game, read the [3] Burger Menus first "; break;
+	case 3:cout << "If you are first time to play, reading the [3] Burger Menus first "; break;
 	default:cout << "Good luck, have fun, don't mad :) "; break;
 	}
 	SetColor();
