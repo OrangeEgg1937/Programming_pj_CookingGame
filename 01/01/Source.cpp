@@ -1,4 +1,4 @@
-ï»¿#include <iostream>
+#include <iostream>
 #include <string>
 #include <iomanip>
 #include <cstdlib>
@@ -467,7 +467,7 @@ void show_single_order(Order list[], int i)
 
 			for (int i = 0; i < (input.length()); i++)
 			{
-				if ((input[i]>='a')&&(input[i]<='z'))
+				if ((input[i] >= 'a') && (input[i] <= 'z'))
 				{
 					((input[i] = (char)((int)input[i] - 32)));
 				}
@@ -496,6 +496,7 @@ void game_start(List a)
 	Order *player_order = new Order[max_order]; // Dynamic memory for order, size of order depends on "max_order"
 
 	char choice[3] = { '\0','\0','\0' }; //user input and data validation
+	string temp_choice;
 	int order = 0;
 	int score = 10; //default score
 	bool pass = 1, checkinput;
@@ -513,6 +514,9 @@ void game_start(List a)
 	{
 		do
 		{
+			choice[0] = '\0';
+			choice[1] = '\0';
+			choice[2] = '\0';
 			checkinput = 0;
 			int remain_no_of_order = 0;
 			for (int i = 0; i < max_order; i++) // Cooking
@@ -541,8 +545,15 @@ void game_start(List a)
 
 			if (score >= 0)
 			{
-				cin >> choice;
-				cin.ignore();
+				cin >> temp_choice;
+				for (int i = 0; i < (temp_choice.length()); i++)
+				{
+					if (i == 3)
+					{
+						break;
+					}
+					choice[i] = temp_choice[i];
+				}
 			}
 			else
 			{
@@ -551,7 +562,7 @@ void game_start(List a)
 				break;
 			}
 
-		
+
 
 			if ((choice[0] == 'U' || choice[0] == 'u' || choice[0] == 'Q' || choice[0] == 'q') && (choice[1] == '\0') && (choice[2] == '\0'))
 			{
@@ -567,7 +578,7 @@ void game_start(List a)
 			{
 				checkinput = 1;
 			}
-			
+
 			if (not(checkinput))
 			{
 				cout << "Wrong input! Please input a valid value!" << endl;
@@ -588,6 +599,7 @@ void game_start(List a)
 		{
 			choice[1] = '0';
 		}
+
 		if (choice[0] == 'Q' || choice[0] == 'q' || score < 0)
 		{
 			break;
@@ -619,6 +631,7 @@ void show_orderlist(List a)
 
 void settingsMenu() {
 	char sett_choice[2] = { '\0','\0' };
+	string temp_sett_choice;
 	char time[5] = { '\0', '\0', '\0', '\0', '\0' }, order[4] = { '\0', '\0', '\0', '\0' };
 	int  sum;
 	bool valid_state = 1;
@@ -629,8 +642,17 @@ void settingsMenu() {
 			<< "[3] Return to Game Menu\n"
 			<< "*********************\n"
 			<< "Option (1 - 3): ";
-		cin >> sett_choice;
-		cin.ignore();
+		cin >> temp_sett_choice;
+		
+		for (int i = 0; i < temp_sett_choice.length(); i++)
+		{
+			if (i == 2)
+			{
+				break;
+			}
+			sett_choice[i] = temp_sett_choice[i];
+		}
+
 		if (sett_choice[1] == '\0')
 		{
 			switch (sett_choice[0]) {
@@ -748,7 +770,7 @@ void settingsMenu() {
 		else
 		{
 			SetConsoleTextAttribute(color, 10);
-			cout << endl << "Wrong input!! Try again!!!";
+			cout << endl << "Wrong input!! Try again!!! \n";
 			SetColor();
 			system("pause");
 			sett_choice[1] = '\0';
@@ -876,7 +898,7 @@ void demo() {
 	cout << "Status                : Preparing" << endl; sleep_for(nanoseconds(timeb));
 	cout << "Remaining Time        : 0'39\"" << endl; sleep_for(nanoseconds(timeb));
 	cout << "Burger Ingredient List: [B]read, [C]heese, Bee[f], [L]ettuce, [B]read" << endl; sleep_for(nanoseconds(timeb));
-	cout << "Burger Key List       : bcflb" << endl << endl; sleep_for(nanoseconds(timeb));
+	cout << "Burger Key List       : BCFLB" << endl << endl; sleep_for(nanoseconds(timeb));
 	cout << "Please choose [U] for update, [R] for return, or " << endl; sleep_for(nanoseconds(timeb));
 	cout << "type correct key list to start cooking: " << endl;
 	gotoxy(30, 12); sleep_for(seconds(timea));
@@ -886,11 +908,18 @@ void demo() {
 	gotoxy(30, 16); sleep_for(seconds(timea));
 	cout << "Let's type in those words in Burger Key List!";
 	gotoxy(30, 18); sleep_for(seconds(timea));
-	cout << "You can either type in the letter in both whole upper case and lower case.";
+	cout << "You can either type in the letter in whether upper case or lower case.";
 	do {
 		gotoxy(41, 9);
 		cin >> input;
-		if ((input != "bcflb") && (input != "BCFLB")) {
+		for (int i = 0; i < (input.length()); i++)
+		{
+			if ((input[i] >= 'a') && (input[i] <= 'z'))
+			{
+				((input[i] = (char)((int)input[i] - 32)));
+			}
+		}
+		if (input != "BCFLB") {
 			gotoxy(50, 9);
 			cout << "OMG! What are you doing???";
 			gotoxy(41, 9);
@@ -1026,8 +1055,11 @@ void demo() {
 }
 
 void instructions() {
-	char instruct_choice;
+	string temp_instruct_choice;
+	char instruct_choice[2] = { '\0','\0' };
+
 	do {
+		instruct_choice[1]='\0';
 		cout << "***Game Instructions***\n";
 		cout << "[1] How to play the game\n";
 		cout << "[2] Game Rules\n";
@@ -1036,49 +1068,66 @@ void instructions() {
 		cout << "[5] Show a demonstration to teach you how to play\n";
 		cout << "[6] Back to the Game Menu\n";
 		cout << "Option(1-6):";
-		cin >> instruct_choice;
-		system("cls");
-		switch (instruct_choice) {
-		case '1':	 cout << "   How to play the game\n" << "1. Choose \"[1] Start Game\" at the Game Menu to start the game.\n"
-			<< "2. A order list will be shown since the game start.\n" << "   The max number of order is default as 5.\n"
-			<< "   You can change it by choosing \"[2] Settings\" at the Game Menu.\n";
-			cout << "3. Each burger has to go through 3 statuses to complete : preparing, cooking and ready to serve.\n" << "\n"
-				<< "   Status: preparing\n" << "1. Input the order number to process the order with status \"preparing\".\n"
-				<< "2. Type the correct order of ingredient following the Burger Ingredient List.\n"
-				<< "   You just need to input the first character of each ingredient.\n"
-				<< "   If the input is correct, the system returns to the order list.\n"
-				<< "   The status of that order will change to \"cooking\".\n" << "\n"
-				<< "   Status: cooking\n" << "1. When the burger is in the \"cooking\" status, you have to wait until it is done.\n"
-				<< "   Tips: You can cook other burgers to save time.\n"
-				<< "   If the burger is cooked, the status of the burger will be changed from \"cooking\" to \"ready to serve\". \n";
-			cout << "   Status: ready to serve\n" << "1. Type the order number of the order with status \"ready to serve\" to serve the order.\n\n";
-			system("pause");
-			system("cls");
-			break;
-		case '2': cout << "   Game Rules\n" << "1. When the game starts, you will initially have 10 marks.\n"
-			<< "2. If the order is served on time, 10 marks will be awarded.\n"
-			<< "   But if the order cannot be served within the time limit, 5 marks will be deducted.\n"
-			<< "3. The game finishes when the score < 0 and you will be returned to the Game Menu.\n\n";
-			system("pause");
-			system("cls");
-			break;
-		case '3': cout << "   Time limit\n" << "1. All order of all types of burger are same.\n"
-			<< "2. The time limit is defaulted as 40 seconds\n" << "3. You can change it by choosing \"[2] Settings\" at the Game Menu.\n\n";
-			system("pause");
-			system("cls");
-			break;
-		case '4': cout << "   How to quit the game\n" << "You can input â€˜qâ€™ or â€˜Qâ€™ in the order list page to quit the game.\n\n";
-			system("pause");
-			system("cls");
-			break;
-		case '5': demo(); system("cls"); break;
-		case '6': break;
-		default: cout << "Invalid input, please input again. \n\n";
-			system("pause");
-			system("cls");
-			break;
+		cin >> temp_instruct_choice;
+		for (int i = 0; i < temp_instruct_choice.length(); i++)
+		{
+			if (i == 2)
+			{
+				break;
+			}
+			instruct_choice[i] = temp_instruct_choice[i];
 		}
-	} while (instruct_choice != '6');
+		system("cls");
+		if (instruct_choice[1] == '\0')
+		{
+			switch (instruct_choice[0]) {
+			case '1':	 cout << "   How to play the game\n" << "1. Choose \"[1] Start Game\" at the Game Menu to start the game.\n"
+				<< "2. A order list will be shown since the game start.\n" << "   The max number of order is default as 5.\n"
+				<< "   You can change it by choosing \"[2] Settings\" at the Game Menu.\n";
+				cout << "3. Each burger has to go through 3 statuses to complete : preparing, cooking and ready to serve.\n" << "\n"
+					<< "   Status: preparing\n" << "1. Input the order number to process the order with status \"preparing\".\n"
+					<< "2. Type the correct order of ingredient following the Burger Ingredient List.\n"
+					<< "   You just need to input the first character of each ingredient.\n"
+					<< "   If the input is correct, the system returns to the order list.\n"
+					<< "   The status of that order will change to \"cooking\".\n" << "\n"
+					<< "   Status: cooking\n" << "1. When the burger is in the \"cooking\" status, you have to wait until it is done.\n"
+					<< "   Tips: You can cook other burgers to save time.\n"
+					<< "   If the burger is cooked, the status of the burger will be changed from \"cooking\" to \"ready to serve\". \n";
+				cout << "   Status: ready to serve\n" << "1. Type the order number of the order with status \"ready to serve\" to serve the order.\n\n";
+				system("pause");
+				system("cls");
+				break;
+			case '2': cout << "   Game Rules\n" << "1. When the game starts, you will initially have 10 marks.\n"
+				<< "2. If the order is served on time, 10 marks will be awarded.\n"
+				<< "   But if the order cannot be served within the time limit, 5 marks will be deducted.\n"
+				<< "3. The game finishes when the score < 0 and you will be returned to the Game Menu.\n\n";
+				system("pause");
+				system("cls");
+				break;
+			case '3': cout << "   Time limit\n" << "1. All order of all types of burger are same.\n"
+				<< "2. The time limit is defaulted as 40 seconds\n" << "3. You can change it by choosing \"[2] Settings\" at the Game Menu.\n\n";
+				system("pause");
+				system("cls");
+				break;
+			case '4': cout << "   How to quit the game\n" << "You can input ¡¥q¡¦ or ¡¥Q¡¦ in the order list page to quit the game.\n\n";
+				system("pause");
+				system("cls");
+				break;
+			case '5': demo(); system("cls"); break;
+			case '6': break;
+			default: cout << "Invalid input, please input again. \n\n";
+				system("pause");
+				system("cls");
+			}
+		}
+		else
+		{
+			cout << "Invalid input, please input again. \n\n";
+			system("pause");
+			system("cls");
+		}
+
+	} while (instruct_choice[0] != '6' && instruct_choice[1] != '\0' );
 }
 
 void credit() {
@@ -1118,7 +1167,7 @@ void starting_screen()
 
 void random_helping_msg(int a)
 {
-	SetConsoleTextAttribute(color, (rand()%8+2));
+	SetConsoleTextAttribute(color, (rand() % 8 + 2));
 	switch (a)
 	{
 	case 1:cout << "If you don't know how tp play the game, try to click [4] Instructions. A demo teacher will help you!"; break;
@@ -1131,13 +1180,15 @@ void random_helping_msg(int a)
 }
 
 int main() {
-	char user_choice[2];
+	char user_choice[2] = { '\0','\0' };
+	string temp_user_choice;
 	List mylist;
 
 	starting_screen();
 
 	do	// Main meun
 	{
+		user_choice[1] = '\0';
 		cout << "Yb        dP       8                                w             w   8              .d88b             8    w               .d88b                       8 8 8 " << endl;
 		cout << " Yb  db  dP  .d88b 8 .d8b .d8b. 8d8b.d8b. .d88b    w8ww .d8b.    w8ww 8d8b. .d88b    8P    .d8b. .d8b. 8.dP w 8d8b. .d88    8P www .d88 8d8b.d8b. .d88b 8 8 8 " << endl;
 		cout << "  YbdPYbdP   8.dP' 8 8    8' .8 8P Y8P Y8 8.dP'     8   8' .8     8   8P Y8 8.dP'    8b    8' .8 8' .8 88b  8 8P Y8 8  8    8b  d8 8  8 8P Y8P Y8 8.dP' \" \" \" " << endl;
@@ -1153,8 +1204,16 @@ int main() {
 		cout << "[6] Exit\n";
 		cout << "=================\n";
 		cout << "Option(1 - 6) : ";
-		cin >> user_choice;
-		cin.ignore();
+		cin >> temp_user_choice;
+		
+		for (int i = 0; i < temp_user_choice.length(); i++)
+		{
+			if (i == 2)
+			{
+				break;
+			}
+			user_choice[i] = temp_user_choice[i];
+		}
 
 		while (user_choice[1] != '\0')
 		{
@@ -1177,9 +1236,18 @@ int main() {
 			cout << "Invalid input! Enter again!";
 			SetColor();
 			cout << endl << "Option(1 - 6) : ";
-			cin >> user_choice;
-			cin.ignore();
+			cin >> temp_user_choice;
+			for (int i = 0; i < temp_user_choice.length(); i++)
+			{
+				if (i == 2)
+				{
+					break;
+				}
+				user_choice[i] = temp_user_choice[i];
+			}
 		}
+
+
 
 		switch (user_choice[0])
 		{

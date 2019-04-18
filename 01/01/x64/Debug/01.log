@@ -4,6 +4,6 @@ c:\users\user\source\repos\orangeegg1937\programming_pj_cookinggame\01\01\source
 c:\users\user\source\repos\orangeegg1937\programming_pj_cookinggame\01\01\source.cpp(37): warning C4244: 'return': conversion from 'time_t' to 'int', possible loss of data
 c:\users\user\source\repos\orangeegg1937\programming_pj_cookinggame\01\01\source.cpp(40): warning C4244: 'return': conversion from 'time_t' to 'int', possible loss of data
 c:\users\user\source\repos\orangeegg1937\programming_pj_cookinggame\01\01\source.cpp(276): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-c:\users\user\source\repos\orangeegg1937\programming_pj_cookinggame\01\01\source.cpp(503): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+c:\users\user\source\repos\orangeegg1937\programming_pj_cookinggame\01\01\source.cpp(504): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
 c:\users\user\source\repos\orangeegg1937\programming_pj_cookinggame\01\01\source.cpp(324): warning C4715: 'Order::show_status': not all control paths return a value
   01.vcxproj -> C:\Users\USER\source\repos\OrangeEgg1937\Programming_pj_CookingGame\01\x64\Debug\01.exe
