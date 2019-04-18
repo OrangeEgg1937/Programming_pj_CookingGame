@@ -3,10 +3,18 @@
 #include <iomanip>
 #include <cstdlib>
 #include <windows.h>
+#include <chrono>
+#include <thread>
+#pragma warning( disable : 4996)
 
 using namespace std;
+using namespace std::this_thread; // sleep_for, sleep_until
+using namespace std::chrono; // nanoseconds, system_clock, seconds
+HANDLE color = GetStdHandle(STD_OUTPUT_HANDLE);
 
 const int max_type = 10, max_burger = 10;//i change temporary
+
+
 
 int min_type = 8, min_burger = 5, max_order = 5, time_limit = 40;
 
@@ -372,29 +380,13 @@ void show_list(List a) // TEST USE !! REMEMBER TO DEL !!
 	cout << endl;
 }
 
-/*
-void display_order(List a, Countdown timer[],int order[],int status[], int score, int total_order) {
-SetColor();
-cout << "*** Order list ***" << endl;
-for (int i = 1; i <= total_order; i++)
+void gotoxy(int xpos, int ypos)
 {
-(timer[i].printTime() < 15)?SetColor(12):SetColor();
-cout << "Order #"<< i ; SetColor();
-cout << ": " << a.call_burger_name(order[i]) << ", ";
-switch (status[i]) {
-case 0: {SetColor(); cout << "preparing, "; SetColor();  break; }
-case 1: {SetColor(14); cout << "cooking, "; SetColor();  break; }
-case 2: {SetColor(11); cout << "ready to serve, "; SetColor();  break; }
+	COORD scrn;
+	HANDLE hOuput = GetStdHandle(STD_OUTPUT_HANDLE);
+	scrn.X = xpos; scrn.Y = ypos;
+	SetConsoleCursorPosition(hOuput, scrn);
 }
-cout << timer[i].printTime() / 60 << "'" << timer[i].printTime() % 60 << "\"" << "    "<< timer[i].printcooktime() << endl;
-}
-SetColor();
-cout << "-----------------------------------------------" << endl;
-for (int i = 1; i <= score / 5; i++) { cout <<"*"; }
-cout<<endl;
-cout << "Score: " << score << endl;
-}
-*/
 
 void sorting(Order a[]) { //1 order is expired, the other will be sorted upward.
 	Order temp;
@@ -425,15 +417,13 @@ void order_list(Order a[], int score)
 		}
 		cout << a[i].show_status() << ", ";
 		SetColor();
-		if (a[i].show_order_status_code() != 0)
+		if (a[i].show_order_time() >= 0)
 		{
-			if (a[i].cookingtimeremain() >= 0)
-				cout << a[i].cookingtimeremain() / 60 << "'" << a[i].cookingtimeremain() - (a[i].cookingtimeremain() / 60 * 60) << "\"" << endl;
-			else cout << "0'0\"" << endl;
+			cout << a[i].show_order_time() / 60 << "'" << a[i].show_order_time() - (a[i].show_order_time() / 60 * 60) << "\"" << endl;
 		}
 		else
 		{
-			cout << a[i].show_order_time() / 60 << "'" << a[i].show_order_time() - (a[i].show_order_time() / 60 * 60) << "\"" << endl;
+			cout << "0'0\"" << endl;
 		}
 	}
 	cout << "----------------------------------------------" << endl;
@@ -441,27 +431,27 @@ void order_list(Order a[], int score)
 	cout << "Enter[U] for update, [Q] for Quit, or [1 - " << max_order << "] for order :" << endl;
 }
 
-
 void show_single_order(Order list[], int i)
 {
-	bool correct = 0;
-	string input, lower_case;
+	bool correct = 1;
+	string input;
 	{
 		do
 		{
+			input = "";
 			cout << "Order #               :" << i + 1 << endl;
 			cout << "Burger                :";
 			cout << list[i].show_order_name() << endl;
 			cout << "Status                :";
 			cout << list[i].show_status() << endl;
 			cout << "Remaining Time        :";
-			if (list[i].show_order_status_code() != 0)
+			if (list[i].show_order_time() >= 0)
 			{
-				cout << list[i].cookingtimeremain() / 60 << "'" << list[i].cookingtimeremain() - (list[i].cookingtimeremain() / 60 * 60) << "\"" << endl;
+				cout << list[i].show_order_time() / 60 << "'" << list[i].show_order_time() - (list[i].show_order_time() / 60 * 60) << "\"" << endl;
 			}
 			else
 			{
-				cout << list[i].show_order_time() / 60 << "'" << list[i].show_order_time() - (list[i].show_order_time() / 60 * 60) << "\"" << endl;
+				cout << "0'0\"" << endl;
 			}
 			cout << "Burger Ingredient List:";
 			list[i].show_full_ingredient_name();
@@ -469,26 +459,22 @@ void show_single_order(Order list[], int i)
 			cout << list[i].show_ingredient_order() << endl;
 			cout << "Please choose[U] for update, [R] for return, or";
 			cout << endl << "Type correct key list to start cooking :";
+			cin >> input;
 
-			lower_case = list[i].show_ingredient_order();
-
-			for (int i = 0; i < 6; i++)
+			for (int i = 0; i < (input.length()); i++)
 			{
-				lower_case[i] = lower_case[i] + 32;
+				if ((input[i]>='a')&&(input[i]<='z'))
+				{
+					((input[i] = (char)((int)input[i] - 32)));
+				}
 			}
 
-			cout << lower_case;
-
-			cin >> input;
-			cin.ignore();
-
-			if ((input == list[i].show_ingredient_order() || input == lower_case) && list[i].show_status() == "preparing")
+			if (input == list[i].show_ingredient_order())
 			{
 				list[i].cooking_start();
 				break;
 			}
-
-			if (input != "U" && input != "u" && input != "R" && input != "r" && input != list[i].show_ingredient_order() && input != lower_case)
+			else if (input != "U" && input != "u" && input != "R" && input != "r")
 			{
 				cout << "Invalid input, please input again.\n";
 				system("pause");
@@ -561,6 +547,8 @@ void game_start(List a)
 				break;
 			}
 
+		
+
 			if ((choice[0] == 'U' || choice[0] == 'u' || choice[0] == 'Q' || choice[0] == 'q') && (choice[1] == '\0') && (choice[2] == '\0'))
 			{
 				checkinput = 1;
@@ -575,8 +563,8 @@ void game_start(List a)
 			{
 				checkinput = 1;
 			}
-
-			if (checkinput == 0)
+			
+			if (not(checkinput))
 			{
 				cout << "Wrong input! Please input a valid value!" << endl;
 				system("pause");
@@ -602,14 +590,14 @@ void game_start(List a)
 		}
 
 		if (choice[1] == '\0')
-			order = ((int)choice[0] - 48);
-		else order = ((int)choice[0] - 48) * 10 + ((int)choice[1] - 48);
+			order = ((int)choice[0] - 48) * 10 + ((int)choice[1] - 48);
+		else	order = ((int)choice[0] - 48);
+
 
 		if (checkinput == 1)
 			show_single_order(player_order, order - 1);
 	}
 }
-
 
 void show_orderlist(List a)
 {
@@ -626,7 +614,7 @@ void show_orderlist(List a)
 }
 
 void settingsMenu() {
-	char sett_choice;
+	char sett_choice[2] = { '\0','\0' };
 	char time[5] = { '\0', '\0', '\0', '\0', '\0' }, order[4] = { '\0', '\0', '\0', '\0' };
 	int  sum;
 	bool valid_state = 1;
@@ -639,120 +627,130 @@ void settingsMenu() {
 			<< "Option (1 - 3): ";
 		cin >> sett_choice;
 		cin.ignore();
-		switch (sett_choice) {
-		case '1': do {
-			system("cls");
-			sum = 0;
-			int temp = 1;
-			int check = 0;
-			valid_state = 1;
-			for (int i = 0; i <= 4; i++)
-			{
-				time[i] = '\0';
-			}
-			cout << "Time limit [1 - 300 sec]: ";
-			cin >> time;
-			cin.ignore();
-
-			for (int i = 0; i <= 4; i++)
-			{
-				if ((time[i] != '\0') && ((time[i] < '0') || (time[i] > '9')))
+		if (sett_choice[1] == '\0')
+		{
+			switch (sett_choice[0]) {
+			case '1': do {
+				system("cls");
+				sum = 0;
+				int temp = 1;
+				int check = 0;
+				valid_state = 1;
+				for (int i = 0; i <= 4; i++)
 				{
-					valid_state = 0;
+					time[i] = '\0';
 				}
-			}
+				cout << "Time limit [1 - 300 sec]: ";
+				cin >> time;
+				cin.ignore();
 
-			for (int i = 1; i <= 4; i++)
-			{
-				if (time[i] == '\0')
+				for (int i = 0; i <= 4; i++)
 				{
-					check = i;
-					break;
+					if ((time[i] != '\0') && ((time[i] < '0') || (time[i] > '9')))
+					{
+						valid_state = 0;
+					}
 				}
-			}
 
-			for (int i = check - 1; i >= 0; i--)
-			{
-				if (time[i] != '\0')
+				for (int i = 1; i <= 4; i++)
 				{
-					if (i <= check - 2)
-						temp *= 10;
-					sum += (int(time[i]) - 48) * temp;
+					if (time[i] == '\0')
+					{
+						check = i;
+						break;
+					}
 				}
-				else sum += 0;
-			}
 
-			cout << sum;
-
-			if (sum < 1 || sum > 300 || valid_state == 0)
-			{
-				cout << "Invalid input, please input again.\n";
-				system("pause");
-			}
-			system("cls");
-		} while (sum < 1 || sum > 300 || valid_state == 0);
-		time_limit = sum;
-		break;
-		case '2': do {
-			system("cls");
-			sum = 0;
-			int temp = 1;
-			int check = 0;
-			valid_state = 1;
-			for (int i = 0; i <= 3; i++)
-			{
-				order[i] = '\0';
-			}
-			cout << "Max number of orders[1 - 50]: ";
-			cin >> order;
-			cin.ignore();
-
-			for (int i = 0; i <= 3; i++)
-			{
-				if ((order[i] != '\0') && ((order[i] < '0') || (order[i] > '9')))
+				for (int i = check - 1; i >= 0; i--)
 				{
-					valid_state = 0;
+					if (time[i] != '\0')
+					{
+						if (i <= check - 2)
+							temp *= 10;
+						sum += (int(time[i]) - 48) * temp;
+					}
+					else sum += 0;
 				}
-			}
 
-			for (int i = 1; i <= 3; i++)
-			{
-				if (order[i] == '\0')
+				if (sum < 1 || sum > 300 || valid_state == 0)
 				{
-					check = i;
-					break;
+					cout << "Invalid input, please input again.\n";
+					system("pause");
 				}
-			}
-
-			for (int i = check - 1; i >= 0; i--)
-			{
-				if (order[i] != '\0')
-				{
-					if (i <= check - 2)
-						temp *= 10;
-					sum += (int(order[i]) - 48) * temp;
-				}
-				else sum += 0;
-			}
-
-			cout << sum;
-
-			if (sum < 1 || sum > 50 || valid_state == 0)
-			{
-				cout << "Invalid input, please input again.\n";
-				system("pause");
-			}
-			system("cls");
-		} while (sum < 1 || sum > 50 || valid_state == 0);
-		max_order = sum;
-		break;
-		case '3': break;
-		default: cout << "Invalid input, please input again. \n\n";
-			system("pause");
-			system("cls");
+				system("cls");
+			} while (sum < 1 || sum > 300 || valid_state == 0);
+			time_limit = sum;
 			break;
+			case '2': do {
+				system("cls");
+				sum = 0;
+				int temp = 1;
+				int check = 0;
+				valid_state = 1;
+				for (int i = 0; i <= 3; i++)
+				{
+					order[i] = '\0';
+				}
+				cout << "Max number of orders[1 - 50]: ";
+				cin >> order;
+				cin.ignore();
+
+				for (int i = 0; i <= 3; i++)
+				{
+					if ((order[i] != '\0') && ((order[i] < '0') || (order[i] > '9')))
+					{
+						valid_state = 0;
+					}
+				}
+
+				for (int i = 1; i <= 3; i++)
+				{
+					if (order[i] == '\0')
+					{
+						check = i;
+						break;
+					}
+				}
+
+				for (int i = check - 1; i >= 0; i--)
+				{
+					if (order[i] != '\0')
+					{
+						if (i <= check - 2)
+							temp *= 10;
+						sum += (int(order[i]) - 48) * temp;
+					}
+					else sum += 0;
+				}
+
+				cout << sum;
+
+				if (sum < 1 || sum > 50 || valid_state == 0)
+				{
+					cout << "Invalid input, please input again.\n";
+					system("pause");
+				}
+				system("cls");
+			} while (sum < 1 || sum > 50 || valid_state == 0);
+			max_order = sum;
+			break;
+			case '3': break;
+			default: cout << "Invalid input, please input again. \n\n";
+				system("pause");
+				system("cls");
+				break;
+			}
 		}
-	} while (sett_choice != '3');
+		else
+		{
+			SetConsoleTextAttribute(color, 10);
+			cout << endl << "Wrong input!! Try again!!!";
+			SetColor();
+			system("pause");
+			sett_choice[1] = '\0';
+			system("cls");
+		}
+	} while (sett_choice[0] != '3');
 	return;
 }
 
@@ -814,6 +812,215 @@ void burgerMenu(List a) {
 	return;
 }
 
+void demo() {
+	string input;
+	int timea = 1, timeb = 10000000;
+	cout << "    #############     " << endl;
+	cout << "    ##         ##     " << endl;
+	cout << "    #  ~~   ~~  #     " << endl;
+	cout << "    #  ()   ()  #     " << endl;
+	cout << "    (     ^     )     " << endl;
+	cout << "     |         |      " << endl;
+	cout << "     |  {===}  |      " << endl;
+	cout << "      \\       /      " << endl;
+	cout << "     /  -----  \\     " << endl;
+	cout << "  ---  |%\\ /%|  ---   " << endl;
+	cout << " /     |%%%%%|     \\  " << endl;
+	cout << "       |%/ \\%|        " << endl;
+	gotoxy(30, 0); sleep_for(seconds(timea));
+	cout << "Welcome to your burger shop!!" << endl;
+	gotoxy(30, 2); sleep_for(seconds(timea));
+	cout << "I am Gordon Ramsey" << endl;
+	gotoxy(30, 4); sleep_for(seconds(timea));
+	cout << "From now on i will be your teacher," << endl;
+	gotoxy(30, 6); sleep_for(seconds(timea));
+	cout << "after you have attended this course" << endl;
+	gotoxy(30, 8); sleep_for(seconds(timea));
+	cout << "You will become a good chef like me" << endl;
+	gotoxy(30, 10); sleep_for(seconds(timea));
+	cout << "So don't let me disappointed ^_^";
+	gotoxy(0, 12);
+	system("PAUSE");
+	system("CLS"); sleep_for(nanoseconds(timeb));
+	cout << "*** Order list ***" << endl; sleep_for(nanoseconds(timeb));
+	cout << "Order #1: Cheese burger, preparing, 0'40\"" << endl; sleep_for(nanoseconds(timeb));
+	cout << "Order #2: Beef burger, preparing, 0'40\"" << endl; sleep_for(nanoseconds(timeb));
+	cout << "Order #3: Cheese burger, preparing, 0'40\"" << endl; sleep_for(nanoseconds(timeb));
+	cout << "Order #4: mushroom burger, preparing, 0'40\"" << endl; sleep_for(nanoseconds(timeb));
+	cout << "Order #5: salmon burger, preparing, 0'40\"" << endl; sleep_for(nanoseconds(timeb));
+	cout << "-----------------------------------------------" << endl; sleep_for(nanoseconds(timeb));
+	cout << "Score: 10" << endl; sleep_for(nanoseconds(timeb));
+	cout << "Enter [U] for update, [Q] for Quit, or [1-5] for order :";
+	gotoxy(60, 2); sleep_for(seconds(timea));
+	cout << "First, you will access to the page called 'Order list'. ," << endl;
+	gotoxy(60, 4); sleep_for(seconds(timea + 1));
+	cout << "Let's try to send '1'";
+	do {
+		gotoxy(58, 8);
+		cout << "          ";
+		gotoxy(58, 8);
+		cin >> input;
+		if (input != "1") {
+			gotoxy(60, 6);
+			cout << "Just type 1 and send it! DON'T YOU KNOW THIS SIMPLE ORDER?";
+		}
+	} while (input != "1");
+	system("CLS"); sleep_for(nanoseconds(timeb));
+	cout << "*** Process Order ***" << endl; sleep_for(nanoseconds(timeb));
+	cout << "Order #               : 1" << endl; sleep_for(nanoseconds(timeb));
+	cout << "Burger                : Cheese Burger" << endl; sleep_for(nanoseconds(timeb));
+	cout << "Status                : Preparing" << endl; sleep_for(nanoseconds(timeb));
+	cout << "Remaining Time        : 0'39\"" << endl; sleep_for(nanoseconds(timeb));
+	cout << "Burger Ingredient List: [B]read, [C]heese, Bee[f], [L]ettuce, [B]read" << endl; sleep_for(nanoseconds(timeb));
+	cout << "Burger Key List       : bcflb" << endl << endl; sleep_for(nanoseconds(timeb));
+	cout << "Please choose [U] for update, [R] for return, or " << endl; sleep_for(nanoseconds(timeb));
+	cout << "type correct key list to start cooking: " << endl;
+	gotoxy(30, 12); sleep_for(seconds(timea));
+	cout << "You DID it!!!";
+	gotoxy(30, 14); sleep_for(seconds(timea));
+	cout << "Here you will navigate to another page called 'Process Order,";
+	gotoxy(30, 16); sleep_for(seconds(timea));
+	cout << "Let's type in those words in Burger Key List!";
+	gotoxy(30, 18); sleep_for(seconds(timea));
+	cout << "You can either type in the letter in both whole upper case and lower case.";
+	do {
+		gotoxy(41, 9);
+		cin >> input;
+		if ((input != "bcflb") && (input != "BCFLB")) {
+			gotoxy(50, 9);
+			cout << "OMG! What are you doing???";
+			gotoxy(41, 9);
+			cout << "     ";
+		}
+	} while ((input != "bcflb") && (input != "BCFLB"));
+	system("CLS"); sleep_for(nanoseconds(timeb));
+	cout << "*** Order list ***" << endl; sleep_for(nanoseconds(timeb));
+	cout << "Order #1: Cheese burger, cooking, 0'39\"" << endl; sleep_for(nanoseconds(timeb));
+	cout << "Order #2: Beef burger, preparing, 0'39\"" << endl; sleep_for(nanoseconds(timeb));
+	cout << "Order #3: Cheese burger, preparing, 0'39\"" << endl; sleep_for(nanoseconds(timeb));
+	cout << "Order #4: mushroom burger, preparing, 0'39\"" << endl; sleep_for(nanoseconds(timeb));
+	cout << "Order #5: salmon burger, preparing, 0'39\"" << endl; sleep_for(nanoseconds(timeb));
+	cout << "-----------------------------------------------" << endl; sleep_for(nanoseconds(timeb));
+	cout << "Score: 10" << endl; sleep_for(nanoseconds(timeb));
+	cout << "Enter [U] for update, [Q] for Quit, or [1-5] for order :";
+	gotoxy(60, 2); sleep_for(seconds(timea));
+	cout << "Good Job!" << endl;
+	gotoxy(60, 4); sleep_for(seconds(timea));
+	cout << "The status of order #1 has changed to cooking";
+	gotoxy(60, 6); sleep_for(seconds(timea));
+	cout << "Seems it will finish after a few second";
+	for (int i = 38; i >= 29; i--) {
+		sleep_for(nanoseconds(timeb * 50));
+		gotoxy(36, 1); cout << i;
+		gotoxy(36, 2); cout << i;
+		gotoxy(38, 3); cout << i;
+		gotoxy(40, 4); cout << i;
+		gotoxy(38, 5); cout << i;
+	}
+	gotoxy(0, 1);
+	cout << "Order #1: Cheese burger, ready to serve, 0'29\"" << endl;
+	gotoxy(60, 10); sleep_for(seconds(timea));
+	cout << "TASTY!!" << endl;
+	gotoxy(60, 12); sleep_for(seconds(timea));
+	cout << "A burger was finished by your hand";
+	gotoxy(60, 14); sleep_for(seconds(timea));
+	cout << "Lets type '1' to send out the order";
+	do {
+		gotoxy(58, 8);
+		cout << "          ";
+		gotoxy(58, 8);
+		cin >> input;
+		if (input != "1") {
+			gotoxy(60, 14);
+			cout << "Just type 1 and send it! DON'T YOU KNOW THIS SIMPLE ORDER?";
+		}
+	} while (input != "1");
+	system("CLS"); sleep_for(nanoseconds(timeb));
+	cout << "*** Order list ***" << endl; sleep_for(nanoseconds(timeb));
+	cout << "Order #1: Beef burger, preparing, 0'29\"" << endl; sleep_for(nanoseconds(timeb));
+	cout << "Order #2: Cheese burger, preparing, 0'29\"" << endl; sleep_for(nanoseconds(timeb));
+	cout << "Order #3: mushroom burger, preparing, 0'29\"" << endl; sleep_for(nanoseconds(timeb));
+	cout << "Order #4: salmon burger, preparing, 0'29\"" << endl; sleep_for(nanoseconds(timeb));
+	cout << "-----------------------------------------------" << endl; sleep_for(nanoseconds(timeb));
+	cout << "Score: 20" << endl; sleep_for(nanoseconds(timeb));
+	cout << "Enter [U] for update, [Q] for Quit, or [1-5] for order :";
+	gotoxy(60, 2); sleep_for(seconds(timea));
+	cout << "Now you have got 10 marks!";
+	gotoxy(60, 4); sleep_for(seconds(timea));
+	cout << "It is a good start";
+	gotoxy(60, 6); sleep_for(seconds(timea));
+	cout << "However, if the score become 0 or smaller";
+	gotoxy(60, 8); sleep_for(seconds(timea));
+	cout << "You have to close the shop :'(";
+	gotoxy(60, 10);
+	system("PAUSE");
+	system("CLS");
+	sleep_for(nanoseconds(timeb));
+	cout << "*** Order list ***" << endl; sleep_for(nanoseconds(timeb));
+	cout << "Order #1: Beef burger, preparing, 0'00\"" << endl; sleep_for(nanoseconds(timeb));
+	cout << "Order #2: Cheese burger, preparing, 0'00\"" << endl; sleep_for(nanoseconds(timeb));
+	cout << "Order #3: mushroom burger, preparing, 0'00\"" << endl; sleep_for(nanoseconds(timeb));
+	cout << "Order #4: salmon burger, preparing, 0'00\"" << endl; sleep_for(nanoseconds(timeb));
+	cout << "-----------------------------------------------" << endl; sleep_for(nanoseconds(timeb));
+	cout << "Score: 20" << endl; sleep_for(nanoseconds(timeb));
+	cout << "Enter [U] for update, [Q] for Quit, or [1-5] for order :";
+	gotoxy(60, 2); sleep_for(seconds(timea));
+	cout << "If you cannot finish 1 order in time";
+	gotoxy(60, 4); sleep_for(seconds(timea));
+	cout << "5 marks will be deducted";
+	gotoxy(60, 6); system("PAUSE");
+	system("CLS"); sleep_for(nanoseconds(timeb));
+	cout << "*** Order list ***" << endl; sleep_for(nanoseconds(timeb));
+	cout << "-----------------------------------------------" << endl; sleep_for(nanoseconds(timeb));
+	cout << "Score: 0" << endl; sleep_for(nanoseconds(timeb));
+	cout << "Enter [U] for update, [Q] for Quit, or [1-5] for order :";
+	gotoxy(60, 2); sleep_for(seconds(timea));
+	cout << "Like this";
+	gotoxy(60, 4); sleep_for(seconds(timea));
+	cout << "Try not to get 0";
+	gotoxy(60, 6); sleep_for(seconds(timea));
+	cout << "And now lets turn back to the few second before";
+	gotoxy(60, 8); sleep_for(seconds(timea));
+	cout << "Let me teach you a new thing!";
+	gotoxy(60, 10);
+	system("PAUSE"); system("CLS"); sleep_for(nanoseconds(timeb));
+	cout << "*** Order list ***" << endl; sleep_for(nanoseconds(timeb));
+	cout << "Order #1: Beef burger, preparing, 0'29\"" << endl; sleep_for(nanoseconds(timeb));
+	cout << "Order #2: Cheese burger, preparing, 0'29\"" << endl; sleep_for(nanoseconds(timeb));
+	cout << "Order #3: mushroom burger, preparing, 0'29\"" << endl; sleep_for(nanoseconds(timeb));
+	cout << "Order #4: salmon burger, preparing, 0'29\"" << endl; sleep_for(nanoseconds(timeb));
+	cout << "-----------------------------------------------" << endl; sleep_for(nanoseconds(timeb));
+	cout << "Score: 20" << endl; sleep_for(nanoseconds(timeb));
+	cout << "Enter [U] for update, [Q] for Quit, or [1-5] for order :";
+	gotoxy(60, 2); sleep_for(seconds(timea));
+	cout << "if you type U";
+	gotoxy(60, 4); sleep_for(seconds(timea));
+	cout << "The order in this list will be refreshed";
+	gotoxy(60, 6); sleep_for(seconds(timea));
+	cout << "And sometimes there will be a new order come in!";
+	gotoxy(58, 7); sleep_for(seconds(timea * 2));
+	cout << "U";
+	sleep_for(seconds(timea));
+	system("CLS");
+	cout << "*** Order list ***" << endl;
+	cout << "Order #1: Beef burger, preparing, 0'29\"" << endl;
+	cout << "Order #2: Cheese burger, preparing, 0'29\"" << endl;
+	cout << "Order #3: mushroom burger, preparing, 0'29\"" << endl;
+	cout << "Order #4: salmon burger, preparing, 0'29\"" << endl;
+	cout << "Order #5: Veggie burger, preparing, 0'40\"" << endl;
+	cout << "-----------------------------------------------" << endl;
+	cout << "Score: 20" << endl;
+	cout << "Enter [U] for update, [Q] for Quit, or [1-5] for order :";
+	gotoxy(60, 2); sleep_for(seconds(timea));
+	cout << "see? There is a new order come in";
+	gotoxy(60, 4); sleep_for(seconds(timea));
+	cout << "and thats all what i can teach to you";
+	gotoxy(60, 6); sleep_for(seconds(timea));
+	cout << "Good Luck and Have FUN!";
+	gotoxy(60, 8);
+	system("PAUSE");
+}
+
 void instructions() {
 	char instruct_choice;
 	do {
@@ -821,9 +1028,10 @@ void instructions() {
 		cout << "[1] How to play the game\n";
 		cout << "[2] Game Rules\n";
 		cout << "[3] About the Time limit\n";
-		cout << "[4} How to quit the game\n";
-		cout << "[5] Back to the Game Menu\n";
-		cout << "Option(1-5):";
+		cout << "[4] How to quit the game\n";
+		cout << "[5] Show a demonstration to teach you how to play\n";
+		cout << "[6] Back to the Game Menu\n";
+		cout << "Option(1-6):";
 		cin >> instruct_choice;
 		system("cls");
 		switch (instruct_choice) {
@@ -859,13 +1067,14 @@ void instructions() {
 			system("pause");
 			system("cls");
 			break;
-		case '5': break;
+		case '5': demo(); system("cls"); break;
+		case '6': break;
 		default: cout << "Invalid input, please input again. \n\n";
 			system("pause");
 			system("cls");
 			break;
 		}
-	} while (instruct_choice != '5');
+	} while (instruct_choice != '6');
 }
 
 void credit() {
@@ -876,14 +1085,52 @@ void credit() {
 		<< setw(15) << "Ho Kwong Wa" << setw(15) << "18006958A" << setw(10) << "203" << "Group A\n"
 		<< setw(15) << "Tam Chi Hong" << setw(15) << "18031710A" << setw(10) << "203" << "Group A\n"
 		<< setw(15) << "Lee Hei Tung" << setw(15) << "18024104A" << setw(10) << "203" << "Group A\n"
-		<< setw(15) << "Pau Chun Wai" << setw(15) << "18xxxxxxA" << setw(10) << "203" << "Group A\n";
+		<< setw(15) << "Pau Chun Wai" << setw(15) << "18071191A" << setw(10) << "203" << "Group A\n";
 	system("pause");
 	system("cls");
 }
 
+void starting_screen()
+{
+	HANDLE color = GetStdHandle(STD_OUTPUT_HANDLE);
+	Sleep(300);
+	SetConsoleTextAttribute(color, 10);
+	cout << "    ___  ___    ___   _  __  _____  ___   __      __ ___  _  _ " << endl;
+	Sleep(200);
+	SetConsoleTextAttribute(color, 11);
+	cout << "   / __|/ _ \\  / _ \\ | |/ / |_   _|/ _ \\  \\ \\    / /|_ _|| \\| |" << endl;
+	Sleep(150);
+	SetConsoleTextAttribute(color, 12);
+	cout << "  | (__| (_) || (_) || ' <    | | | (_) |  \\ \\/\\/ /  | | | .` |" << endl;
+	Sleep(200);
+	SetConsoleTextAttribute(color, 13);
+	cout << "   \\___|\\___/  \\___/ |_|\\_\\   |_|  \\___/    \\_/\\_/  |___||_|\\_|" << endl;
+	SetColor();
+	cout << "\n\nCan you win this game?" << endl;
+	cout << "\nTips: FULLSCREEN WILL HAVE A BETTER PLAYING ENVIRONMENT :)" << endl;
+	system("pause");
+	system("cls");
+}
+
+void random_helping_msg(int a)
+{
+	SetConsoleTextAttribute(color, (rand()%8+2));
+	switch (a)
+	{
+	case 1:cout << "If you don't know how tp play the game, try to click [4] Instructions. A demo teacher will help you!"; break;
+	case 2:cout << "You can type [2] to set the basic value!"; break;
+	case 3:cout << "Before to play the game, read the [3] Burger Menus first "; break;
+	default:cout << "Good luck, have fun, don't mad :) "; break;
+	}
+	SetColor();
+	cout << endl << endl;
+}
+
 int main() {
-	char user_choice, confrim_to_quit;
+	char user_choice[2];
 	List mylist;
+
+	starting_screen();
 
 	do	// Main meun
 	{
@@ -892,7 +1139,7 @@ int main() {
 		cout << "  YbdPYbdP   8.dP' 8 8    8' .8 8P Y8P Y8 8.dP'     8   8' .8     8   8P Y8 8.dP'    8b    8' .8 8' .8 88b  8 8P Y8 8  8    8b  d8 8  8 8P Y8P Y8 8.dP' \" \" \" " << endl;
 		cout << "   YP  YP    `Y88P 8 `Y8P `Y8P' 8   8   8 `Y88P     Y8P `Y8P'     Y8P 8   8 `Y88P    `Y88P `Y8P' `Y8P' 8 Yb 8 8   8 `Y88    `Y88P' `Y88 8   8   8 `Y88P w w w " << endl;
 		cout << "                                                                                                                    wwdP                                      " << endl;
-		//		cout << "A good Welcome Message will be designed by someone\n\n";
+		random_helping_msg(rand() % 3 + 1);
 		cout << "*** Game Menu ***\n";
 		cout << "[1] Start Game\n";
 		cout << "[2] Settings\n";
@@ -901,15 +1148,36 @@ int main() {
 		cout << "[5] Credits\n";
 		cout << "[6] Exit\n";
 		cout << "=================\n";
-		cout << "TEST Meun:\n";
-		cout << "[7] Show List\n";
-		cout << "[8] Show Order\n";
-		cout << "*****************\n";
 		cout << "Option(1 - 6) : ";
 		cin >> user_choice;
 		cin.ignore();
 
-		switch (user_choice)
+		while (user_choice[1] != '\0')
+		{
+			system("cls");
+			user_choice[1] = '\0';
+			cout << "Yb        dP       8                                w             w   8              .d88b             8    w               .d88b                       8 8 8 " << endl;
+			cout << " Yb  db  dP  .d88b 8 .d8b .d8b. 8d8b.d8b. .d88b    w8ww .d8b.    w8ww 8d8b. .d88b    8P    .d8b. .d8b. 8.dP w 8d8b. .d88    8P www .d88 8d8b.d8b. .d88b 8 8 8 " << endl;
+			cout << "  YbdPYbdP   8.dP' 8 8    8' .8 8P Y8P Y8 8.dP'     8   8' .8     8   8P Y8 8.dP'    8b    8' .8 8' .8 88b  8 8P Y8 8  8    8b  d8 8  8 8P Y8P Y8 8.dP' \" \" \" " << endl;
+			cout << "   YP  YP    `Y88P 8 `Y8P `Y8P' 8   8   8 `Y88P     Y8P `Y8P'     Y8P 8   8 `Y88P    `Y88P `Y8P' `Y8P' 8 Yb 8 8   8 `Y88    `Y88P' `Y88 8   8   8 `Y88P w w w " << endl;
+			cout << "                                                                                                                    wwdP                                      " << endl;
+			cout << "*** Game Menu ***\n";
+			cout << "[1] Start Game\n";
+			cout << "[2] Settings\n";
+			cout << "[3] Burger Menus\n";
+			cout << "[4] Instructions\n";
+			cout << "[5] Credits\n";
+			cout << "[6] Exit\n";
+			cout << "=================\n";
+			SetConsoleTextAttribute(color, 10);
+			cout << "Invalid input! Enter again!";
+			SetColor();
+			cout << endl << "Option(1 - 6) : ";
+			cin >> user_choice;
+			cin.ignore();
+		}
+
+		switch (user_choice[0])
 		{
 		case '1':system("cls"); game_start(mylist); break;
 		case '2':system("cls"); settingsMenu(); break;
@@ -919,23 +1187,21 @@ int main() {
 		case '6':do {
 			system("cls");
 			cout << "Are you really want to quit? (Y/N)\n";
-			cin >> confrim_to_quit;
+			cin >> user_choice;
 			cin.ignore();
-			if (confrim_to_quit != 'Y' && confrim_to_quit != 'y' && confrim_to_quit != 'N' && confrim_to_quit != 'n')
+			if (user_choice[0] != 'Y' && user_choice[0] != 'y' && user_choice[0] != 'N' && user_choice[0] != 'n')
 			{
 				cout << "Invalid input, please input again. \n";
 				system("pause");
 			}
-		} while (confrim_to_quit != 'Y' && confrim_to_quit != 'y' && confrim_to_quit != 'N' && confrim_to_quit != 'n');
-		break;
-		case '7':system("cls"); show_list(mylist); system("pause"); break;
-		case '8':system("cls"); show_orderlist(mylist); system("pause"); break;
+		} while (user_choice[0] != 'Y' && user_choice[0] != 'y' && user_choice[0] != 'N' && user_choice[0] != 'n');
 		default: cout << "Invalid input, please input again. \n\n"; system("pause"); break;
 		}
 
 		system("cls");
 
-	} while (confrim_to_quit != 'Y' && confrim_to_quit != 'y');
+	} while (user_choice[0] != 'Y' && user_choice[0] != 'y');
 	cout << "Good bye!" << "\n";
+	system("pause");
 	return 0;
 }
