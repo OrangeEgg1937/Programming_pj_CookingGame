@@ -10,3 +10,10 @@ This is a console based typing games
   - Type the option number, then press "Enter"
   
 ![N|Solid](https://i.imgur.com/C9s1z6n.png)
+
+# Credit
+  - Ho Kwong Wa
+  - Tam Chi Hong
+  - Lee Hei Tung
+  - Pau Chun Wai
+  - Ng Ho Tin
