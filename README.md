@@ -1,12 +1,7 @@
 # Programming Group Project : Cooking Game
+This is a console based typing games
 
-Programming Guide : System Requirements, We will finish it before deadline :)
-
-# Menu Progress
-- [x] Game menu
-- [ ] Start Game 
-- [ ] Settings
-- [ ] Burger Menus
-- [ ] Instructions
-- [x] Credits
-
+# How to play
+  -Type the meun option number, then press "Enter"
+  
+![N|Solid](https://i.imgur.com/C9s1z6n.png)
