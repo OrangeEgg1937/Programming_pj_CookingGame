@@ -2,6 +2,6 @@
 This is a console based typing games
 
 # How to play
-  - Export documents as Markdown, HTML and PDF
+  - Type the option number, then press "Enter"
   
 ![N|Solid](https://i.imgur.com/C9s1z6n.png)
