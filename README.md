@@ -10,6 +10,7 @@ This is a console based typing games
   - Type the option number, then press "Enter"
   
 ![N|Solid](https://i.imgur.com/C9s1z6n.png)
+  - For more detail, please read the **instructions** in the game
 
 # Credit
   - Ho Kwong Wa
