@@ -1,0 +1,17 @@
+﻿  main.cpp
+c:\users\user\documents\main.cpp(30): warning C4244: '=': conversion from 'time_t' to 'int', possible loss of data
+c:\users\user\documents\main.cpp(34): warning C4244: '=': conversion from 'time_t' to 'int', possible loss of data
+c:\users\user\documents\main.cpp(37): warning C4244: 'return': conversion from 'time_t' to 'int', possible loss of data
+c:\users\user\documents\main.cpp(40): warning C4244: 'return': conversion from 'time_t' to 'int', possible loss of data
+c:\users\user\documents\main.cpp(174): warning C4018: '<': signed/unsigned mismatch
+c:\users\user\documents\main.cpp(276): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+c:\users\user\documents\main.cpp(468): warning C4018: '<': signed/unsigned mismatch
+c:\users\user\documents\main.cpp(504): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+c:\users\user\documents\main.cpp(549): warning C4018: '<': signed/unsigned mismatch
+c:\users\user\documents\main.cpp(647): warning C4018: '<': signed/unsigned mismatch
+c:\users\user\documents\main.cpp(915): warning C4018: '<': signed/unsigned mismatch
+c:\users\user\documents\main.cpp(1072): warning C4018: '<': signed/unsigned mismatch
+c:\users\user\documents\main.cpp(1209): warning C4018: '<': signed/unsigned mismatch
+c:\users\user\documents\main.cpp(1240): warning C4018: '<': signed/unsigned mismatch
+c:\users\user\documents\main.cpp(324): warning C4715: 'Order::show_status': not all control paths return a value
+  main.vcxproj -> C:\Users\USER\source\repos\main\Debug\main.exe
